@@ -1,0 +1,213 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+    <h:head>
+        <ui:include src="../../WEB-INF/template/css-include.xhtml" />
+        <title>Create Question | Exam Online System</title>
+    </h:head>
+    <h:body>
+        <div class="wrapper">
+            <ui:include src="../../WEB-INF/template/sidebar-include.xhtml" />
+            <div class="main-panel">
+                <ui:include src="../../WEB-INF/template/nav-include.xhtml" />
+                <div class="content">
+                    <div class="container-fluid">
+                        <div class="col-sm-8 col-sm-offset-2 col-md-10 col-md-offset-1">
+                            <!--Wizard-->
+                            <div class="wizard-container">
+                                <div class="card wizard-card" data-color="purple" id="create-question-card">
+                                    <h:form id="cq-form">
+                                        <div class="wizard-header">
+                                            <h3 class="wizard-title">
+                                                Create New Question
+                                            </h3>
+                                            <h5>Fill in the form to create question</h5>
+                                        </div>
+                                        <div class="wizard-navigation">
+                                            <ul>
+                                                <li>
+                                                    <a href="#question" data-toggle="tab">Question</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#answer" data-toggle="tab">Answer</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#finish" data-toggle="tab">Finish</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="tab-content">
+                                            <div class="tab-pane" id="question">
+                                                <div class="row">
+                                                    <h4 class="info-text"> Let's start with the question</h4>
+                                                    <div class="row">
+                                                        <div class="col-sm-offset-2 col-sm-8">
+                                                            <div class="form-group label-floating is-empty">
+                                                                <label class="control-label">Question...</label>
+                                                                <h:inputTextarea value="#{questionBean.content}"
+                                                                                 class="form-control" rows="1"
+                                                                                 a:required="true" a:maxlength="200" />
+                                                                <span class="help-block">200 characters</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-sm-offset-2 col-sm-4 col-md-offset-2 col-md-4 col-lg-offset-2 col-lg-3">
+                                                            <div class="form-group">
+                                                                <label class="control-label"></label>
+                                                                <h:selectOneMenu id="sl-question-type" class="selectpicker" value="#{questionBean.questionTypeId}"
+                                                                                 a:data-style="btn btn-primary btn-round"
+                                                                                 a:required="true">
+                                                                    <f:selectItem itemLabel="Choose type" itemDisabled="true" />
+                                                                    <f:selectItems value="#{questionBean.questionTypeList}" var="t" itemValue="#{t.id}" itemLabel="#{t.title}" />
+                                                                </h:selectOneMenu>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-4 col-md-4 col-lg-offset-2 col-lg-3">
+                                                            <div class="form-group">
+                                                                <label class="control-label"></label>
+                                                                <h:selectOneMenu class="selectpicker" value="#{questionBean.courseId}"
+                                                                                 a:data-style="btn btn-primary btn-round"
+                                                                                 a:required="true">
+                                                                    <f:selectItem itemLabel="Choose course" itemDisabled="true" />
+                                                                    <f:selectItems value="#{questionBean.courseList}" var="c" itemValue="#{c.id}" itemLabel="#{c.name}" />
+                                                                </h:selectOneMenu>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane" id="answer">
+                                                <div class="row">
+                                                    <h4 class="info-text"> ...And the answers of question</h4>
+                                                    <div class="row">
+                                                        <div class="col-sm-offset-2 col-sm-8">
+                                                            <div class="table-responsive">
+                                                                <table class="table table-hover">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>#</th>
+                                                                            <th>Is Correct</th>
+                                                                            <th class="text-center">Answer</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <ui:repeat value="#{questionBean.answers}" varStatus="loop" var="item">
+                                                                            <tr>
+                                                                                <td style="border: none;">#{loop.index + 1}.</td>
+                                                                                <td style="border: none;" class="text-center">
+                                                                                    <div class="checkbox">
+                                                                                        <label>
+                                                                                            <h:selectBooleanCheckbox value="#{questionBean.answers[loop.index][1]}" class="is-correct" />
+                                                                                        </label>
+                                                                                    </div>
+                                                                                </td>
+                                                                                <td style="border: none;">
+                                                                                    <div class="form-group label-floating is-empty">
+                                                                                        <!--<label class="control-label">Answer...</label>-->
+                                                                                        <h:inputTextarea value="#{questionBean.answers[loop.index][0]}" 
+                                                                                                         class="form-control answer #{loop.index lt 2 ? '' : 'optional-answer'}"
+                                                                                                         rows="1"
+                                                                                                         a:maxlength="100"/>
+                                                                                        <span class="help-block">100 characters</span>
+                                                                                    </div>
+                                                                                </td>
+
+                                                                            </tr>
+                                                                        </ui:repeat>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane" id="finish">
+                                                <div class="row">
+                                                    <h4 class="info-text">
+                                                        <p>Done, click Submit to submit the question.</p>
+                                                        <p>You will be redirected to question page after that!</p>
+                                                    </h4>
+                                                    <div class="swal2-icon swal2-success animate" style="display: block;" >
+                                                        <span class="line tip animate-success-tip" />
+                                                        <span class="line long animate-success-long" />
+                                                        <div class="placeholder" />
+                                                        <div class="fix" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="wizard-footer">
+                                            <div class="pull-right">
+                                                <input type='button' class='btn btn-next btn-fill btn-rose btn-wd' name='next' value='Next' />
+                                                <h:commandButton action="#{questionBean.createQuestion()}" type='submit' class='btn btn-finish btn-fill btn-rose btn-wd' value='Submit' />
+                                            </div>
+                                            <div class="pull-left">
+                                                <input type='button' class='btn btn-previous btn-fill btn-default btn-wd' name='previous' value='Previous' />
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </h:form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ui:include src="../../WEB-INF/template/footer-include.xhtml" />
+            </div>
+        </div>
+    </h:body>
+
+    <ui:include src="../../WEB-INF/template/js-include.xhtml" />
+    <h:outputScript library="js" name="custom-script.js" />
+    <script>
+        $(function () {
+            var isMulti = false;
+            $('#cq-form\\:sl-question-type').on('change', function () {
+                isMulti = $(this).val() === "T03";
+                console.log(isMulti);
+                $('.is-correct').each(function (index) {
+                    if (index === 0) {
+                        $(this).prop('checked', true);
+                    } else {
+                        $(this).prop('checked', false);
+                    }
+                });
+            });
+            $('.is-correct').each(function () {
+                $(this).prop('disabled', true);
+            });
+            $('.is-correct').on('change', function () {
+                if (!isMulti) {
+                    $('.is-correct').not(this).prop('checked', false);
+                }
+            });
+            $('.answer').each(function (index) {
+                $(this).on('input', function () {
+                    if ($(this).val() === "") {
+                        $('.is-correct').eq(index).prop('disabled', true).prop('checked', false);
+                    } else {
+                        $('.is-correct').eq(index).prop('disabled', false);
+                    }
+                });
+            });
+
+            $('.answer:not(".optional-answer")').each(function () {
+                $(this).prop('required', true);
+            });
+
+            $.validator.addMethod('is-correct', function () {
+                if ($('.is-correct:checkbox:checked').length > 0) {
+                    return true;
+                }
+                return false;
+            });
+            
+        });
+    </script>
+</html>
+

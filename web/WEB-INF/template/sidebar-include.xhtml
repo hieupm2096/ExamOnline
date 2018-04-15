@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <div class="sidebar" data-active-color="rose" data-background-color="white">
+        <!--
+    Tip 1: You can change the color of active element of the sidebar using: data-active-color="purple | blue | green | orange | red | rose"
+    Tip 2: you can also add an image using data-image tag
+    Tip 3: you can change the color of the sidebar with data-background-color="white | black"
+        -->
+        <div class="logo">
+            <a href="http://localhost:8080/ExamOnline/app/home.xhtml" class="simple-text logo-mini">
+                EO
+            </a>
+            <a href="http://localhost:8080/ExamOnline/app/home.xhtml" class="simple-text logo-normal">
+                Exam Online
+            </a>
+        </div>
+        <div class="sidebar-wrapper">
+            <ul class="nav">
+                <li class="#{request.requestURI == '/ExamOnline/app/home.xhtml' ? 'active' : ''}">
+                    <a href="http://localhost:8080/ExamOnline/app/home.xhtml">
+                        <i class="material-icons">home</i>
+                        <p> Home </p>
+                    </a>
+                </li>
+                <li class="#{request.requestURI.contains('/question/') ? 'active' : ''}">
+                    <a data-toggle="collapse" href="#questions">
+                        <i class="material-icons">question_answer</i>
+                        <p> Questions
+                            <b class="caret"></b>
+                        </p>
+                    </a>
+                    <div class="collapse #{request.requestURI.contains('/question/') ? 'in' : ''}" id="questions">
+                        <ul class="nav">
+                            <li class="#{request.requestURI == '/ExamOnline/app/question/question-list.xhtml' || request.requestURI == '/ExamOnline/app/question/question-details.xhtml' ? 'active' : ''}">
+                                <a href="http://localhost:8080/ExamOnline/app/question/question-list.xhtml">
+                                    <span class="sidebar-mini"> L </span>
+                                    <span class="sidebar-normal"> Question List </span>
+                                </a>
+                            </li>
+                            <li class="#{request.requestURI == '/ExamOnline/app/question/question-create.xhtml' ? 'active' : null}">
+                                <a href="http://localhost:8080/ExamOnline/app/question/question-create.xhtml">
+                                    <span class="sidebar-mini"> C </span>
+                                    <span class="sidebar-normal"> Create Question </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="./pages/timeline.html">
+                                    <span class="sidebar-mini"> T </span>
+                                    <span class="sidebar-normal"> Timeline </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="./pages/login.html">
+                                    <span class="sidebar-mini"> LP </span>
+                                    <span class="sidebar-normal"> Login Page </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</ui:composition>
