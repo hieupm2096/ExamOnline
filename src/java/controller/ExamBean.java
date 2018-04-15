@@ -57,7 +57,11 @@ public class ExamBean implements Serializable {
     @EJB
     private ExamFacade examFacade;
 
-    private String name;
+    public List<Exam> getExamList() {
+        return examFacade.findAll();
+    }
+
+    private String description;
     private int numOfQuestion;
     private int duration;
     private List<Student> students;
@@ -68,78 +72,6 @@ public class ExamBean implements Serializable {
 
     private String questionId;
     private String courseId;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getNumOfQuestion() {
-        return numOfQuestion;
-    }
-
-    public void setNumOfQuestion(int numOfQuestion) {
-        this.numOfQuestion = numOfQuestion;
-    }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-
-    public List<Student> getStudents() {
-        return students;
-    }
-
-    public void setStudents(List<Student> students) {
-        this.students = students;
-    }
-
-    public String getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(String studentId) {
-        this.studentId = studentId;
-    }
-
-    public String getClassId() {
-        return classId;
-    }
-
-    public void setClassId(String classId) {
-        this.classId = classId;
-    }
-
-    public List<Question> getQuestions() {
-        return questions;
-    }
-
-    public void setQuestions(List<Question> questions) {
-        this.questions = questions;
-    }
-
-    public String getQuestionId() {
-        return questionId;
-    }
-
-    public void setQuestionId(String questionId) {
-        this.questionId = questionId;
-    }
-
-    public String getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(String courseId) {
-        this.courseId = courseId;
-    }
 
     @PostConstruct
     public void init() {
@@ -234,7 +166,7 @@ public class ExamBean implements Serializable {
             if (courseId != null) {
                 Course course = courseFacade.find(courseId);
                 if (course != null) {
-                    
+
                     // get question of course id
                     List<Question> courseQuestions = questionFacade.findQuestionByCourse(course);
 
@@ -262,12 +194,12 @@ public class ExamBean implements Serializable {
 
     public String createExam() {
         String id = examFacade.generateExamId();
-        
+
         // for test purpose only
         String userId = "U000001";
         Exam exam = new Exam();
         exam.setId(id);
-        exam.setName(name);
+        exam.setDescription(description);
         exam.setUserId(userFacade.find(userId));
         exam.setNumOfQuestion(numOfQuestion);
         exam.setCourseId(courseFacade.find(courseId));
@@ -276,7 +208,7 @@ public class ExamBean implements Serializable {
         createExamStudent(exam);
         return "index?faces-redirect=true";
     }
-    
+
     private void createExamStudent(Exam exam) {
         if (students != null && !students.isEmpty()) {
             for (Student student : students) {
@@ -288,6 +220,82 @@ public class ExamBean implements Serializable {
                 examStudentFacade.create(es);
             }
         }
- 
+
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getNumOfQuestion() {
+        return numOfQuestion;
+    }
+
+    public void setNumOfQuestion(int numOfQuestion) {
+        this.numOfQuestion = numOfQuestion;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(List<Student> students) {
+        this.students = students;
+    }
+
+    public String getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
+    }
+
+    public String getClassId() {
+        return classId;
+    }
+
+    public void setClassId(String classId) {
+        this.classId = classId;
+    }
+
+    public List<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
+    }
+
+    public String getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(String questionId) {
+        this.questionId = questionId;
+    }
+
+    public String getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(String courseId) {
+        this.courseId = courseId;
+    }
+    
+    public java.util.Date compareTime(int duration) {
+        return new java.util.Date(new java.util.Date().getTime() - (duration * 60000));
     }
 }
