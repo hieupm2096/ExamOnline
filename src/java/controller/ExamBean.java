@@ -130,6 +130,8 @@ public class ExamBean implements Serializable {
                                 students.add(student);
                             }
                         }
+                        foundClass = null;
+                        classId = "";
                     } else {
                         students = classStudents;
                     }
@@ -206,7 +208,25 @@ public class ExamBean implements Serializable {
         String id = classId;
         entity.Class temp = classFacade.find(id);
         if (temp != null && temp.getStatus()) {
-            foundClass = temp;
+            foundClass.setId(temp.getId());
+            foundClass.setDescription(temp.getDescription());
+            foundClass.setUserId(temp.getUserId());
+            foundClass.setStatus(temp.getStatus());
+            List<Student> temps = new ArrayList<>();
+            for (Student student : temp.getStudentList()) {
+                if (student.getStatus()) {
+                    temps.add(student);
+                }
+            }
+            foundClass.setStudentList(temps);
+        }
+    }
+    
+    public void findStudent() {
+        String id = studentId;
+        Student temp = studentFacade.find(id);
+        if (temp != null && temp.getStatus()) {
+            foundStudent = temp;
         }
     }
 
@@ -243,6 +263,10 @@ public class ExamBean implements Serializable {
        
     public java.util.Date compareTime(int duration) {
         return new java.util.Date(new java.util.Date().getTime() - (duration * 60000));
+    }
+    
+    public boolean isClassFound() {
+        return foundClass != null;
     }
 
     public String getDescription() {
@@ -316,5 +340,22 @@ public class ExamBean implements Serializable {
     public void setCourseId(String courseId) {
         this.courseId = courseId;
     }
+
+    public Student getFoundStudent() {
+        return foundStudent;
+    }
+
+    public void setFoundStudent(Student foundStudent) {
+        this.foundStudent = foundStudent;
+    }
+
+    public Class getFoundClass() {
+        return foundClass;
+    }
+
+    public void setFoundClass(Class foundClass) {
+        this.foundClass = foundClass;
+    }
+    
     
 }
