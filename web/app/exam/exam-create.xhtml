@@ -1,12 +1,252 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
     <h:head>
-        <title>Facelet Title</title>
+        <ui:include src="../../WEB-INF/template/css-include.xhtml" />
+        <title>Create Exam | Exam Online System</title>
     </h:head>
     <h:body>
-        Hello from Facelets
+        <div class="wrapper">
+            <ui:include src="../../WEB-INF/template/sidebar-include.xhtml" />
+            <div class="main-panel">
+                <ui:include src="../../WEB-INF/template/nav-include.xhtml" />
+                <div class="content">
+                    <div class="container-fluid">
+                        <div class="col-sm-10 col-sm-offset-1 col-md-10 col-md-offset-1">
+                            <div class="wizard-container">
+                                <div class="card wizard-card" data-color="purple" id="create-exam-card">
+                                    <h:form id="ce-form">
+                                        <div class="wizard-header">
+                                            <h3 class="wizard-title">
+                                                Create New Exam
+                                            </h3>
+                                            <h5>Fill in the form to create new exam</h5>
+                                        </div>
+                                        <div class="wizard-navigation">
+                                            <ul>
+                                                <li>
+                                                    <a href="#exam" data-toggle="tab">Exam</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#student" data-toggle="tab">Student</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#question" data-toggle="tab">Question</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#finish" data-toggle="tab">Finish</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="tab-content">
+                                            <div class="tab-pane" id="exam">
+                                                <div class="row">
+                                                    <h4 class="info-text">Let's start with the exam</h4>
+                                                    <div class="row">
+                                                        <div class="col-xs-offset-1 col-xs-10 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
+                                                            <div class="form-group label-floating is-empty">
+                                                                <label class="control-label">Description... </label>
+                                                                <h:inputTextarea value="#{examBean.description}"
+                                                                                 class="form-control" rows="1"
+                                                                                 a:required="true" a:maxlength="200" />
+                                                                <span class="help-block">200 characters</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-offset-1 col-xs-10 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
+                                                            <label class="control-label">Course</label>
+                                                            <h:selectOneMenu value="#{examBean.courseId}" class="selectpicker" a:data-style="btn btn-primary btn-round" a:title="Choose course">
+                                                                <f:selectItem itemLabel="Choose course" itemDisabled="true" />
+                                                                <f:selectItems value="#{examBean.courseList}" var="c" itemValue="#{c.id}" itemLabel="#{c.name}" />
+                                                            </h:selectOneMenu>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-offset-1 col-xs-5 col-sm-offset-1 col-sm-4 col-md-offset-2 col-md-3">
+                                                            <div class="form-group">
+                                                                <label class="control-label">Duration (min)</label>
+                                                                <h:selectOneMenu value="#{examBean.duration}" class="selectpicker" a:data-style="select-with-transition" a:required="true">
+                                                                    <f:selectItem itemLabel="Duration" itemDisabled="true" />
+                                                                    <f:selectItem itemValue="15" itemLabel="15" />
+                                                                    <f:selectItem itemValue="30" itemLabel="30" />
+                                                                    <f:selectItem itemValue="45" itemLabel="45" />
+                                                                    <f:selectItem itemValue="60" itemLabel="60" />
+                                                                    <f:selectItem itemValue="90" itemLabel="90" />
+                                                                    <f:selectItem itemValue="120" itemLabel="120" />
+                                                                </h:selectOneMenu>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-5 col-sm-2 col-sm-offset-1 col-sm-5 col-md-offset-1 col-md-4">
+                                                            <div class="form-group">
+                                                                <label class="control-label">Number of question</label>
+                                                                <h:inputText value="#{examBean.numOfQuestion}" class="form-control"
+                                                                             a:required="true" a:type="number" a:min="5" a:max="1000" a:value="5" />
+                                                                <span class="help-block">At least 5 questions, maximum 1000 questions</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane" id="student">
+                                                <div class="row">
+                                                    <h4 class="info-text">
+                                                        <p>...Add the attending students</p>
+                                                        <p> by 
+                                                            <a href="#" data-toggle="modal" data-target="#class-modal"> their class </a>
+                                                            / 
+                                                            <a href="#" data-toggle="modal" data-target="#student-modal"> their ID</a>
+                                                        </p>
+                                                    </h4>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="table-responsive material-datatables col-md-offset-1 col-md-10">
+                                                        <h:dataTable value="#{examBean.students}" var="s"
+                                                                     class="table table-striped table-no-bordered table-hover" 
+                                                                     id="student-datatables" cellspacing="0" width="100%" style="width:100%"
+                                                                     columnClasses=",,,,text-center">
+                                                            <h:column>
+                                                                <f:facet name="header">#</f:facet>
+                                                                    #{s.id}
+                                                            </h:column>
+                                                            <h:column>
+                                                                <f:facet name="header">Name</f:facet>
+                                                                    #{s.name}
+                                                            </h:column>
+                                                            <h:column>
+                                                                <f:facet name="header">Class</f:facet>
+                                                                    #{s.classId.id}
+                                                            </h:column>
+                                                            <h:column>
+                                                                <f:facet name="header">Email</f:facet>
+                                                                    #{s.email}
+                                                            </h:column>
+                                                            <h:column headerClass="disabled-sorting text-center td-actions">
+                                                                <f:facet name="header"></f:facet>
+                                                                <h:commandLink 
+
+                                                                    class="btn btn-simple btn-danger btn-icon remove" 
+                                                                    rel="tooltip" a:data-original-title="Remove Question">
+                                                                    <i class="material-icons">close</i>
+                                                                </h:commandLink>
+                                                            </h:column>
+                                                        </h:dataTable>
+                                                    </div>
+                                                </div>
+
+                                                <!--Modal-->
+                                                <div class="modal fade" id="class-modal" tabindex="-1" role="dialog">
+                                                    <div class="modal-dialog modal-lg" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="card card-plain">
+                                                                <div class="modal-header">
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <i class="material-icons">close</i>
+                                                                    </button>
+                                                                    <h2 class="modal-title card-title text-center">Class</h2>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div class="col-md-offset-1 col-md-10">
+                                                                        <div class="row">
+                                                                            <div class="row">
+                                                                                <div class="form-group is-empty">
+                                                                                    <div class="input-group">
+                                                                                        <h:inputText value="#{examBean.classId}" id="txt-class-id" class="form-control" a:minlength="7" a:maxlength="7" a:placeholder="Class ID" />
+                                                                                        <span class="input-group-btn">
+                                                                                            <h:commandLink action="#{examBean.findClass()}" class="btn btn-white btn-raised btn-fab btn-fab-mini">
+                                                                                                <f:ajax execute="txt-class-id" />
+                                                                                                <i class="material-icons">search</i>
+                                                                                            </h:commandLink>
+                                                                                        </span>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!--/Modal-->
+                                            </div>
+                                            <div class="tab-pane" id="question">
+                                                <div class="row">
+                                                    <h4 class="info-text">Finally, the questions in exam</h4>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane" id="finish">
+                                                <div class="row">
+                                                    <h4 class="info-text">
+                                                        <p>Done, click Submit to submit the exam.</p>
+                                                        <p>You will be redirected to exam page afterward</p>
+                                                    </h4>
+                                                    <div class="swal2-icon swal2-success animate" style="display: block;" >
+                                                        <span class="line tip animate-success-tip" />
+                                                        <span class="line long animate-success-long" />
+                                                        <div class="placeholder" />
+                                                        <div class="fix" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="wizard-footer">
+                                            <div class="pull-right">
+                                                <input type='button' class='btn btn-next btn-fill btn-rose btn-wd' name='next' value='Next' />
+                                                <h:commandButton action="#{examBean.createExam()}" type='submit' class='btn btn-finish btn-fill btn-rose btn-wd' value='Submit' />
+                                            </div>
+                                            <div class="pull-left">
+                                                <input type='button' class='btn btn-previous btn-fill btn-default btn-wd' name='previous' value='Previous' />
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </h:form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ui:include src="../../WEB-INF/template/footer-include.xhtml" />
+            </div>
+        </div>
     </h:body>
+    <ui:include src="../../WEB-INF/template/js-include.xhtml" />
+    <script>
+        $(function () {
+            $('#ce-form\\:student-datatables').DataTable({
+                "pagingType": "full_numbers",
+                "lengthMenu": [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, "All"]
+                ],
+                responsive: true,
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "Search records"
+                }
+
+            });
+
+            $('#ce-form\\:class-datatables').DataTable({
+                "pagingType": "full_numbers",
+                "lengthMenu": [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, "All"]
+                ],
+                responsive: true,
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "Search records"
+                }
+
+            });
+
+        });
+    </script>
 </html>
 

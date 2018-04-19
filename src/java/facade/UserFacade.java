@@ -19,6 +19,8 @@ import org.slf4j.LoggerFactory;
  */
 @Stateless
 public class UserFacade extends AbstractFacade<User> {
+    
+    private Logger LOGGER = LoggerFactory.getLogger(UserFacade.class);
 
     @PersistenceContext(unitName = "ExamOnlinePU")
     private EntityManager em;
@@ -42,8 +44,7 @@ public class UserFacade extends AbstractFacade<User> {
                         .setParameter("password", password)
                         .getSingleResult();
             } catch (NoResultException e) {
-                Logger logger = LoggerFactory.getLogger(UserFacade.class);
-                logger.error(e.getMessage());
+                LOGGER.error(e.getMessage());
             }
         }
         // else  email or/and password is empty

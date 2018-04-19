@@ -5,6 +5,7 @@
  */
 package controller;
 
+import entity.Class;
 import entity.Course;
 import entity.Exam;
 import entity.ExamStudent;
@@ -60,6 +61,10 @@ public class ExamBean implements Serializable {
     public List<Exam> getExamList() {
         return examFacade.findAll();
     }
+    
+    public List<Course> getCourseList() {
+        return courseFacade.findAll();
+    }
 
     private String description;
     private int numOfQuestion;
@@ -68,10 +73,15 @@ public class ExamBean implements Serializable {
     private List<Question> questions;
 
     private String studentId;
+    private Student foundStudent;
+    
     private String classId;
+    private entity.Class foundClass;
 
     private String questionId;
     private String courseId;
+    
+    private List<entity.Class> classList;
 
     @PostConstruct
     public void init() {
@@ -191,6 +201,14 @@ public class ExamBean implements Serializable {
         }
         // else max number of question reached
     }
+    
+    public void findClass() {
+        String id = classId;
+        entity.Class temp = classFacade.find(id);
+        if (temp != null && temp.getStatus()) {
+            foundClass = temp;
+        }
+    }
 
     public String createExam() {
         String id = examFacade.generateExamId();
@@ -221,6 +239,10 @@ public class ExamBean implements Serializable {
             }
         }
 
+    }
+       
+    public java.util.Date compareTime(int duration) {
+        return new java.util.Date(new java.util.Date().getTime() - (duration * 60000));
     }
 
     public String getDescription() {
@@ -295,7 +317,4 @@ public class ExamBean implements Serializable {
         this.courseId = courseId;
     }
     
-    public java.util.Date compareTime(int duration) {
-        return new java.util.Date(new java.util.Date().getTime() - (duration * 60000));
-    }
 }

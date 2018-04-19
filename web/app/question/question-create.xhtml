@@ -70,7 +70,7 @@
                                                         <div class="col-sm-4 col-md-4 col-lg-offset-2 col-lg-3">
                                                             <div class="form-group">
                                                                 <label class="control-label"></label>
-                                                                <h:selectOneMenu class="selectpicker" value="#{questionBean.courseId}"
+                                                                <h:selectOneMenu id="sl-course" class="selectpicker" value="#{questionBean.courseId}"
                                                                                  a:data-style="btn btn-primary btn-round"
                                                                                  a:required="true">
                                                                     <f:selectItem itemLabel="Choose course" itemDisabled="true" />
@@ -130,7 +130,7 @@
                                                 <div class="row">
                                                     <h4 class="info-text">
                                                         <p>Done, click Submit to submit the question.</p>
-                                                        <p>You will be redirected to question page after that!</p>
+                                                        <p>You will be redirected to question page afterward</p>
                                                     </h4>
                                                     <div class="swal2-icon swal2-success animate" style="display: block;" >
                                                         <span class="line tip animate-success-tip" />
@@ -163,12 +163,11 @@
     </h:body>
 
     <ui:include src="../../WEB-INF/template/js-include.xhtml" />
-    <h:outputScript library="js" name="custom-script.js" />
     <script>
         $(function () {
             var isMulti = false;
             $('#cq-form\\:sl-question-type').on('change', function () {
-                isMulti = $(this).val() === "T03";
+                isMulti = $(this).val() === "T02";
                 console.log(isMulti);
                 $('.is-correct').each(function (index) {
                     if (index === 0) {
