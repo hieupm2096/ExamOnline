@@ -94,28 +94,18 @@ public class ExamBean implements Serializable {
     }
 
     public void addStudentToList() {
-        Student student = null;
-        boolean isContained = false;
-        if (studentId != null) {
-            if (students != null && !students.isEmpty()) {
-                for (Student s : students) {
-                    if (s.getId().equals(studentId)) {
-                        isContained = true;
-                        break;
-                    }
-                }
-                if (!isContained) {
-                    student = studentFacade.findAvailableStudentById(studentId);
-                }
-            } else {
-                student = studentFacade.findAvailableStudentById(studentId);
-            }
-            if (student != null) {
-                students.add(student);
-            }
-            // else student is not found
+        if (!students.contains(foundStudent)) {
+            students.add(foundStudent);
         }
-        // else studentId is empty
+    }
+    
+    public void removeStudentFromList(String id) {
+        for (Student student : students) {
+            if (student.getId().equals(id)) {
+                students.remove(student);
+                break;
+            }
+        }
     }
 
     public void addClassToList() {
@@ -208,6 +198,7 @@ public class ExamBean implements Serializable {
         String id = classId;
         entity.Class temp = classFacade.find(id);
         if (temp != null && temp.getStatus()) {
+            foundClass = new entity.Class();
             foundClass.setId(temp.getId());
             foundClass.setDescription(temp.getDescription());
             foundClass.setUserId(temp.getUserId());
