@@ -8,7 +8,6 @@ package entity;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -18,7 +17,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -60,8 +58,6 @@ public class Class implements Serializable {
     private List<Student> studentList;
     @ManyToMany(mappedBy = "classList")
     private List<Course> courseList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "classId")
-    private List<Student> studentList1;
     @JoinColumn(name = "_user_id", referencedColumnName = "_id")
     @ManyToOne(optional = false)
     private User userId;
@@ -118,15 +114,6 @@ public class Class implements Serializable {
 
     public void setCourseList(List<Course> courseList) {
         this.courseList = courseList;
-    }
-
-    @XmlTransient
-    public List<Student> getStudentList1() {
-        return studentList1;
-    }
-
-    public void setStudentList1(List<Student> studentList1) {
-        this.studentList1 = studentList1;
     }
 
     public User getUserId() {
