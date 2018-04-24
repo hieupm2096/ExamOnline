@@ -17,6 +17,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -32,7 +33,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "ExamStudent.findByStudentId", query = "SELECT e FROM ExamStudent e WHERE e.examStudentPK.studentId = :studentId")
     , @NamedQuery(name = "ExamStudent.findByResult", query = "SELECT e FROM ExamStudent e WHERE e.result = :result")
     , @NamedQuery(name = "ExamStudent.findByStartTime", query = "SELECT e FROM ExamStudent e WHERE e.startTime = :startTime")
-    , @NamedQuery(name = "ExamStudent.findByEndTime", query = "SELECT e FROM ExamStudent e WHERE e.endTime = :endTime")})
+    , @NamedQuery(name = "ExamStudent.findByEndTime", query = "SELECT e FROM ExamStudent e WHERE e.endTime = :endTime")
+    , @NamedQuery(name = "ExamStudent.findByPasscode", query = "SELECT e FROM ExamStudent e WHERE e.passcode = :passcode")})
 public class ExamStudent implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -46,6 +48,9 @@ public class ExamStudent implements Serializable {
     @Column(name = "_end_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date endTime;
+    @Size(max = 7)
+    @Column(name = "_passcode")
+    private String passcode;
     @JoinColumn(name = "_exam_id", referencedColumnName = "_id", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Exam exam;
@@ -94,6 +99,14 @@ public class ExamStudent implements Serializable {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    public String getPasscode() {
+        return passcode;
+    }
+
+    public void setPasscode(String passcode) {
+        this.passcode = passcode;
     }
 
     public Exam getExam() {
