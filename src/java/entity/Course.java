@@ -13,6 +13,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -58,6 +59,11 @@ public class Course implements Serializable {
     private boolean status;
     @ManyToMany(mappedBy = "courseList")
     private List<Student> studentList;
+    @JoinTable(name = "courseclass", joinColumns = {
+        @JoinColumn(name = "_course_id", referencedColumnName = "_id")}, inverseJoinColumns = {
+        @JoinColumn(name = "_class_id", referencedColumnName = "_id")})
+    @ManyToMany
+    private List<Class> classList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "courseId")
     private List<Exam> examList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "courseId")
@@ -117,6 +123,15 @@ public class Course implements Serializable {
 
     public void setStudentList(List<Student> studentList) {
         this.studentList = studentList;
+    }
+
+    @XmlTransient
+    public List<Class> getClassList() {
+        return classList;
+    }
+
+    public void setClassList(List<Class> classList) {
+        this.classList = classList;
     }
 
     @XmlTransient

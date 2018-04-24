@@ -38,6 +38,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Exam.findAll", query = "SELECT e FROM Exam e")
     , @NamedQuery(name = "Exam.findById", query = "SELECT e FROM Exam e WHERE e.id = :id")
+    , @NamedQuery(name = "Exam.findByDescription", query = "SELECT e FROM Exam e WHERE e.description = :description")
     , @NamedQuery(name = "Exam.findByNumOfQuestion", query = "SELECT e FROM Exam e WHERE e.numOfQuestion = :numOfQuestion")
     , @NamedQuery(name = "Exam.findByDuration", query = "SELECT e FROM Exam e WHERE e.duration = :duration")
     , @NamedQuery(name = "Exam.findByStartTime", query = "SELECT e FROM Exam e WHERE e.startTime = :startTime")})
@@ -50,7 +51,7 @@ public class Exam implements Serializable {
     @Size(min = 1, max = 7)
     @Column(name = "_id")
     private String id;
-    @Size(max = 100)
+    @Size(max = 200)
     @Column(name = "_description")
     private String description;
     @Basic(optional = false)

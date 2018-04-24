@@ -54,14 +54,14 @@ public class Question implements Serializable {
     private boolean status;
     @ManyToMany(mappedBy = "questionList")
     private List<Exam> examList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "questionId")
-    private List<Answer> answerList;
     @JoinColumn(name = "_question_type_id", referencedColumnName = "_id")
     @ManyToOne(optional = false)
     private QuestionType questionTypeId;
     @JoinColumn(name = "_course_id", referencedColumnName = "_id")
     @ManyToOne(optional = false)
     private Course courseId;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "questionId")
+    private List<Answer> answerList;
 
     public Question() {
     }
@@ -108,15 +108,6 @@ public class Question implements Serializable {
         this.examList = examList;
     }
 
-    @XmlTransient
-    public List<Answer> getAnswerList() {
-        return answerList;
-    }
-
-    public void setAnswerList(List<Answer> answerList) {
-        this.answerList = answerList;
-    }
-
     public QuestionType getQuestionTypeId() {
         return questionTypeId;
     }
@@ -131,6 +122,15 @@ public class Question implements Serializable {
 
     public void setCourseId(Course courseId) {
         this.courseId = courseId;
+    }
+
+    @XmlTransient
+    public List<Answer> getAnswerList() {
+        return answerList;
+    }
+
+    public void setAnswerList(List<Answer> answerList) {
+        this.answerList = answerList;
     }
 
     @Override

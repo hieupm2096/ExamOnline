@@ -68,6 +68,8 @@ public class Student implements Serializable {
     @NotNull
     @Column(name = "_status")
     private boolean status;
+    @ManyToMany(mappedBy = "studentList")
+    private List<Class> classList;
     @JoinTable(name = "studentcourse", joinColumns = {
         @JoinColumn(name = "_student_id", referencedColumnName = "_id")}, inverseJoinColumns = {
         @JoinColumn(name = "_course_id", referencedColumnName = "_id")})
@@ -132,6 +134,15 @@ public class Student implements Serializable {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    @XmlTransient
+    public List<Class> getClassList() {
+        return classList;
+    }
+
+    public void setClassList(List<Class> classList) {
+        this.classList = classList;
     }
 
     @XmlTransient

@@ -13,6 +13,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -51,8 +53,15 @@ public class Class implements Serializable {
     @NotNull
     @Column(name = "_status")
     private boolean status;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "classId")
+    @JoinTable(name = "classstudent", joinColumns = {
+        @JoinColumn(name = "_class_id", referencedColumnName = "_id")}, inverseJoinColumns = {
+        @JoinColumn(name = "_student_id", referencedColumnName = "_id")})
+    @ManyToMany
     private List<Student> studentList;
+    @ManyToMany(mappedBy = "classList")
+    private List<Course> courseList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "classId")
+    private List<Student> studentList1;
     @JoinColumn(name = "_user_id", referencedColumnName = "_id")
     @ManyToOne(optional = false)
     private User userId;
@@ -100,6 +109,24 @@ public class Class implements Serializable {
 
     public void setStudentList(List<Student> studentList) {
         this.studentList = studentList;
+    }
+
+    @XmlTransient
+    public List<Course> getCourseList() {
+        return courseList;
+    }
+
+    public void setCourseList(List<Course> courseList) {
+        this.courseList = courseList;
+    }
+
+    @XmlTransient
+    public List<Student> getStudentList1() {
+        return studentList1;
+    }
+
+    public void setStudentList1(List<Student> studentList1) {
+        this.studentList1 = studentList1;
     }
 
     public User getUserId() {
