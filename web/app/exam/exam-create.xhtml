@@ -18,8 +18,8 @@
                     <div class="container-fluid">
                         <div class="col-sm-10 col-sm-offset-1 col-md-10 col-md-offset-1">
                             <div class="wizard-container">
-                                <div class="card wizard-card" data-color="purple" id="create-exam-card">
-                                    <h:form id="ce-form">
+                                <div class="card wizard-card" data-color="purple">
+                                    <h:form id="ceForm">
                                         <div class="wizard-header">
                                             <h3 class="wizard-title">
                                                 Create New Exam
@@ -60,7 +60,8 @@
                                                     <div class="row">
                                                         <div class="col-xs-offset-1 col-xs-10 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
                                                             <label class="control-label">Course</label>
-                                                            <h:selectOneMenu value="#{examBean.courseId}" class="selectpicker" a:data-style="btn btn-primary btn-round" a:title="Choose course">
+                                                            <h:selectOneMenu id="courseId" value="#{examBean.courseId}" class="selectpicker" 
+                                                                             a:data-style="btn btn-primary btn-round" a:title="Choose course" a:required="true">
                                                                 <f:selectItem itemLabel="Choose course" itemDisabled="true" />
                                                                 <f:selectItems value="#{examBean.courseList}" var="c" itemValue="#{c.id}" itemLabel="#{c.name}" />
                                                             </h:selectOneMenu>
@@ -70,7 +71,8 @@
                                                         <div class="col-xs-offset-1 col-xs-5 col-sm-offset-1 col-sm-4 col-md-offset-2 col-md-3">
                                                             <div class="form-group">
                                                                 <label class="control-label">Duration (min)</label>
-                                                                <h:selectOneMenu value="#{examBean.duration}" class="selectpicker" a:data-style="select-with-transition" a:required="true">
+                                                                <h:selectOneMenu value="#{examBean.duration}" class="selectpicker" 
+                                                                                 a:data-style="select-with-transition" a:required="true">
                                                                     <f:selectItem itemLabel="Duration" itemDisabled="true" />
                                                                     <f:selectItem itemValue="15" itemLabel="15" />
                                                                     <f:selectItem itemValue="30" itemLabel="30" />
@@ -84,7 +86,7 @@
                                                         <div class="col-xs-5 col-sm-2 col-sm-offset-1 col-sm-5 col-md-offset-1 col-md-4">
                                                             <div class="form-group">
                                                                 <label class="control-label">Number of question</label>
-                                                                <h:inputText value="#{examBean.numOfQuestion}" class="form-control"
+                                                                <h:inputText id="numOfQuestion" value="#{examBean.numOfQuestion}" class="form-control"
                                                                              a:required="true" a:type="number" a:min="5" a:max="1000" a:value="5" />
                                                                 <span class="help-block">At least 5 questions, maximum 1000 questions</span>
                                                             </div>
@@ -98,50 +100,11 @@
                                                         <p>...Add the attending students</p>
                                                         <p> by 
                                                             <a href="#" data-toggle="modal" data-target="#class-modal"> their class </a>
-                                                            / 
+                                                            or 
                                                             <a href="#" data-toggle="modal" data-target="#student-modal"> their ID</a>
                                                         </p>
                                                     </h4>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="table-responsive col-md-offset-1 col-md-10">
-                                                        <h:panelGroup id="student-datatables-form">
-                                                            <h:dataTable value="#{examBean.students}" var="s"
-                                                                         class="table table-hover" 
-                                                                         id="student-datatables" cellspacing="0" width="100%" style="width:100%"
-                                                                         columnClasses=",,,,text-center">
-                                                                <h:column>
-                                                                    <f:facet name="header">#</f:facet>
-                                                                        #{s.id}
-                                                                </h:column>
-                                                                <h:column>
-                                                                    <f:facet name="header">Name</f:facet>
-                                                                        #{s.name}
-                                                                </h:column>
-                                                                <h:column>
-                                                                    <f:facet name="header">Class</f:facet>
-                                                                        #{s.classId.id}
-                                                                </h:column>
-                                                                <h:column>
-                                                                    <f:facet name="header">Email</f:facet>
-                                                                        #{s.email}
-                                                                </h:column>
-                                                                <h:column headerClass="disabled-sorting text-center td-actions">
-                                                                    <f:facet name="header"></f:facet>
-                                                                    <h:commandLink
-                                                                        
-                                                                        class="btn btn-simple btn-danger btn-icon remove" 
-                                                                        rel="tooltip" a:data-original-title="Remove Student">
-                                                                        <i class="material-icons">close</i>
-                                                                        
-                                                                    </h:commandLink>
-                                                                </h:column>
-                                                            </h:dataTable>
-                                                        </h:panelGroup>
-                                                    </div>
-                                                </div>
-
-                                                <!--Modal-->
                                                 <!--Class Modal-->
                                                 <div class="modal fade" id="class-modal" tabindex="-1" role="dialog">
                                                     <div class="modal-dialog modal-lg" role="document">
@@ -159,18 +122,21 @@
                                                                         <div class="row">
                                                                             <div class="form-group is-empty">
                                                                                 <div class="input-group">
-                                                                                    <h:inputText value="#{examBean.classId}" id="txt-class-id" class="form-control" a:minlength="7" a:maxlength="7" a:placeholder="Class ID" />
+                                                                                    <h:inputText value="#{examBean.classId}" id="classId" class="form-control"
+                                                                                                 a:minlength="7" a:maxlength="7" a:placeholder="Class ID" />
+                                                                                    <span class="help-block">7 characters</span>
                                                                                     <span class="input-group-btn">
                                                                                         <h:commandLink action="#{examBean.findClass()}" class="btn btn-white btn-raised btn-fab btn-fab-mini">
-                                                                                            <f:ajax execute="txt-class-id" render="class-info class-info-form add-class-to-list-form add-class-to-list" />
+                                                                                            <f:ajax execute="ceForm:classId" render="ceForm:classInfoPanelGroup ceForm:classInfoForm ceForm:addClassToListPanelGroup ceForm:addClassToListBtn" />
                                                                                             <i class="material-icons">search</i>
                                                                                         </h:commandLink>
                                                                                     </span>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <h:panelGroup id="class-info">
-                                                                            <h:panelGroup id="class-info-form" rendered="#{examBean.foundClass != null}">
+
+                                                                        <h:panelGroup id="classInfoPanelGroup">
+                                                                            <h:panelGroup id="classInfoForm" rendered="#{examBean.foundClass != null}">
                                                                                 <div class="row">
                                                                                     <div class="form-group">
                                                                                         <label class="control-label">Description</label>
@@ -213,9 +179,15 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="modal-footer">
-                                                                    <h:panelGroup id="add-class-to-list-form" class="col-md-offset-1 col-md-10">
-                                                                        <h:commandButton action="#{examBean.addClassToList()}" id="add-class-to-list" value="Add Students" type="button" class="btn btn-simple btn-primary" rendered="#{examBean.foundClass != null}">
-                                                                            <f:ajax execute="txt-class-id" render="student-datatables class-info class-info-form add-class-to-list-form add-class-to-list" />
+                                                                    <h:panelGroup id="addClassToListPanelGroup" 
+                                                                                  class="col-md-offset-1 col-md-10">
+                                                                        <h:commandButton id="addClassToListBtn"
+                                                                                         action="#{examBean.addClassToList()}"
+                                                                                         value="Add Students" type="button" 
+                                                                                         class="btn btn-simple btn-primary" 
+                                                                                         rendered="#{examBean.foundClass != null}">
+                                                                            <f:ajax execute="ceForm:classId"
+                                                                                    render="ceForm:studentDatatablesForm ceForm:studentDatatables ceForm:classInfoForm ceForm:classInfoPanelGroup ceForm:addClassToListBtn ceForm:addClassToListPanelGroup" />
                                                                         </h:commandButton>
                                                                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Close</button>
                                                                     </h:panelGroup>
@@ -225,89 +197,86 @@
                                                     </div>
                                                 </div>
                                                 <!--/Class Modal-->
-
-                                                <!--Student Modal-->
-                                                <div class="modal fade" id="student-modal" tabindex="-1" role="dialog">
-                                                    <div class="modal-dialog modal-lg" role="document">
-                                                        <div class="modal-content">
-                                                            <div class="card card-plain">
-                                                                <div class="modal-header">
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <div class="row">
+                                                    <div class="table-responsive col-md-offset-1 col-md-10">
+                                                        <h:panelGroup id="studentDatatablesForm">
+                                                            <h:dataTable value="#{examBean.students}" var="s"
+                                                                         class="table" 
+                                                                         id="studentDatatables"
+                                                                         columnClasses=",,,,text-center" rendered="#{examBean.students.size() > 0}">
+                                                                <h:column>
+                                                                    <f:facet name="header">#</f:facet>
+                                                                        #{s.id}
+                                                                </h:column>
+                                                                <h:column>
+                                                                    <f:facet name="header">Name</f:facet>
+                                                                        #{s.name}
+                                                                </h:column>
+                                                                <h:column>
+                                                                    <f:facet name="header">Class</f:facet>
+                                                                        #{s.classId.id}
+                                                                </h:column>
+                                                                <h:column>
+                                                                    <f:facet name="header">Email</f:facet>
+                                                                        #{s.email}
+                                                                </h:column>
+                                                                <h:column headerClass="disabled-sorting text-center td-actions">
+                                                                    <f:facet name="header"></f:facet>
+                                                                    <h:commandLink
+                                                                        action="#{examBean.removeStudentFromList(s)}"
+                                                                        class="btn btn-simple btn-danger btn-icon" 
+                                                                        rel="tooltip" a:data-original-title="Remove Student">
                                                                         <i class="material-icons">close</i>
-                                                                    </button>
-                                                                    <h2 class="modal-title card-title text-center">Student</h2>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <div class="col-md-offset-1 col-md-10">
-                                                                        <div class="row">
-                                                                            <div class="form-group is-empty">
-                                                                                <div class="input-group">
-                                                                                    <span class="input-group-addon">
-                                                                                        <i class="material-icons">assignment_ind</i>
-                                                                                    </span>
-                                                                                    <h:inputText value="#{examBean.studentId}" id="txt-student-id" class="form-control"
-                                                                                                 a:minlength="7" a:maxlength="7" a:placeholder="Student ID"/>
-                                                                                    <span class="input-group-btn">
-                                                                                        <h:commandLink action="#{examBean.findStudent()}" class="btn btn-white btn-raised btn-fab btn-fab-mini">
-                                                                                            <f:ajax execute="txt-student-id" render="student-info student-info-form add-student-to-list-form add-student-to-list" />
-                                                                                            <i class="material-icons">search</i>
-                                                                                        </h:commandLink>
-                                                                                    </span>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <h:panelGroup id="student-info">
-                                                                            <h:panelGroup id="student-info-form" rendered="#{examBean.foundStudent != null}">
-                                                                                <div class="row">
-                                                                                    <div class="form-group col-md-6">
-                                                                                        <div class="input-group">
-                                                                                            <span class="input-group-addon">
-                                                                                                <i class="material-icons">person</i>
-                                                                                            </span>
-                                                                                            <h:inputText value="#{examBean.foundStudent.name}" class="form-control" readonly="true" />
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group col-md-6">
-                                                                                        <div class="input-group">
-                                                                                            <span class="input-group-addon">
-                                                                                                <i class="material-icons">group</i>
-                                                                                            </span>
-                                                                                            <h:inputText value="#{examBean.foundStudent.classId.id}" class="form-control" readonly="true" />
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row">
-                                                                                    <div class="form-group">
-                                                                                        <div class="input-group">
-                                                                                            <span class="input-group-addon">
-                                                                                                <i class="material-icons">email</i>
-                                                                                            </span>
-                                                                                            <h:inputText value="#{examBean.foundStudent.email}" class="form-control" readonly="true" />
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </h:panelGroup>
-                                                                        </h:panelGroup>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <h:panelGroup id="add-student-to-list-form" class="col-md-offset-1 col-md-10">
-                                                                        <h:commandButton action="#{examBean.addStudentToList()}" id="add-student-to-list" value="Add Students" type="button" class="btn btn-simple btn-primary" rendered="#{examBean.foundStudent != null}">
-                                                                            <f:ajax execute="txt-class-id" render="student-datatables student-info student-info-form add-student-to-list-form add-student-to-list" />
-                                                                        </h:commandButton>
-                                                                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Close</button>
-                                                                    </h:panelGroup>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                                        <f:ajax execute="" render=":student-datatables-form:student-datatables"/>
+                                                                    </h:commandLink>
+                                                                </h:column>
+                                                            </h:dataTable>
+                                                        </h:panelGroup>
                                                     </div>
                                                 </div>
-                                                <!--/Student Modal-->
-                                                <!--/Modal-->
                                             </div>
                                             <div class="tab-pane" id="question">
                                                 <div class="row">
-                                                    <h4 class="info-text">Finally, the questions in exam</h4>
+                                                    <h4 class="info-text">
+                                                        <p>Finally, add the questions in exam</p>
+                                                        <p>
+                                                            <a href="#" data-toggle="modal" data-target="#question-modal"> specifically </a>
+                                                            or 
+                                                            <h:commandLink action="#{examBean.addQuestionToListAuto()}" value="automatically">
+                                                                <f:ajax execute="numOfQuestion courseId" render="question-datatables-form question-datatables" />
+                                                            </h:commandLink>
+                                                        </p>
+                                                    </h4>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="table-responsive col-md-offset-1 col-md-10">
+                                                        <h:panelGroup id="question-datatables-form">
+                                                            <h:dataTable value="#{examBean.questions}" var="q"
+                                                                         class="table" 
+                                                                         id="question-datatables"
+                                                                         columnClasses=",,,,text-center"
+                                                                         rendered="#{examBean.questions.size() > 0}">
+                                                                <h:column>
+                                                                    <f:facet name="header">#</f:facet>
+                                                                        #{q.id}
+                                                                </h:column>
+                                                                <h:column>
+                                                                    <f:facet name="header">Question</f:facet>
+                                                                        #{q.content}
+                                                                </h:column>
+                                                                <h:column headerClass="disabled-sorting text-center td-actions">
+                                                                    <f:facet name="header"></f:facet>
+                                                                    <h:commandLink
+                                                                        action="#{examBean.removeStudentFromList(s)}"
+                                                                        class="btn btn-simple btn-danger btn-icon" 
+                                                                        rel="tooltip" a:data-original-title="Remove Question">
+                                                                        <i class="material-icons">close</i>
+                                                                        <f:ajax execute="" render="question-datatables-form question-datatables" />
+                                                                    </h:commandLink>
+                                                                </h:column>
+                                                            </h:dataTable>
+                                                        </h:panelGroup>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="tab-pane" id="finish">
@@ -335,10 +304,168 @@
                                             </div>
                                             <div class="clearfix"></div>
                                         </div>
+
+                                        <!--Modal-->
+                                        <div class="section cd-section">
+
+
+                                            <!--Student Modal-->
+                                            <div class="modal fade" id="student-modal" tabindex="-1" role="dialog">
+                                                <div class="modal-dialog modal-lg" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="card card-plain">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <i class="material-icons">close</i>
+                                                                </button>
+                                                                <h2 class="modal-title card-title text-center">Student</h2>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="col-md-offset-1 col-md-10">
+                                                                    <div class="row">
+                                                                        <div class="form-group is-empty">
+                                                                            <div class="input-group">
+                                                                                <span class="input-group-addon">
+                                                                                    <i class="material-icons">assignment_ind</i>
+                                                                                </span>
+                                                                                <h:inputText value="#{examBean.studentId}" id="txt-student-id" class="form-control"
+                                                                                             a:minlength="7" a:maxlength="7" a:placeholder="Student ID"/>
+                                                                                <span class="input-group-btn">
+                                                                                    <h:commandLink action="#{examBean.findStudent()}" class="btn btn-white btn-raised btn-fab btn-fab-mini">
+                                                                                        <f:ajax execute="txt-student-id" render="student-info student-info-form add-student-to-list-form add-student-to-list" />
+                                                                                        <i class="material-icons">search</i>
+                                                                                    </h:commandLink>
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <h:panelGroup id="student-info">
+                                                                        <h:panelGroup id="student-info-form" rendered="#{examBean.foundStudent != null}">
+                                                                            <div class="row">
+                                                                                <div class="form-group col-md-6">
+                                                                                    <div class="input-group">
+                                                                                        <span class="input-group-addon">
+                                                                                            <i class="material-icons">person</i>
+                                                                                        </span>
+                                                                                        <h:inputText value="#{examBean.foundStudent.name}" class="form-control" readonly="true" />
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="form-group col-md-6">
+                                                                                    <div class="input-group">
+                                                                                        <span class="input-group-addon">
+                                                                                            <i class="material-icons">group</i>
+                                                                                        </span>
+                                                                                        <h:inputText value="#{examBean.foundStudent.classId.id}" class="form-control" readonly="true" />
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="row">
+                                                                                <div class="form-group">
+                                                                                    <div class="input-group">
+                                                                                        <span class="input-group-addon">
+                                                                                            <i class="material-icons">email</i>
+                                                                                        </span>
+                                                                                        <h:inputText value="#{examBean.foundStudent.email}" class="form-control" readonly="true" />
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </h:panelGroup>
+                                                                    </h:panelGroup>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <h:panelGroup id="add-student-to-list-form" class="col-md-offset-1 col-md-10">
+                                                                    <h:commandButton action="#{examBean.addStudentToList()}" id="add-student-to-list" value="Add Students" type="button" class="btn btn-simple btn-primary" rendered="#{examBean.foundStudent != null}">
+                                                                        <f:ajax render="student-datatables-form student-datatables student-info student-info-form add-student-to-list-form add-student-to-list" />
+                                                                    </h:commandButton>
+                                                                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Close</button>
+                                                                </h:panelGroup>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--/Student Modal-->
+
+                                            <!--Question Modal-->
+                                            <div class="modal fade" id="question-modal" tabindex="-1" role="dialog">
+                                                <div class="modal-dialog modal-lg" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="card card-plain">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <i class="material-icons">close</i>
+                                                                </button>
+                                                                <h2 class="modal-title card-title text-center">Question</h2>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="col-md-offset-1 col-md-10">
+                                                                    <div class="row">
+                                                                        <div class="form-group is-empty col-md-12">
+                                                                            <div class="input-group">
+                                                                                <h:inputText value="#{examBean.questionId}" id="txt-question-id" class="form-control" a:minlength="7" a:maxlength="7" a:placeholder="Question ID" />
+                                                                                <span class="help-block">7 characters</span>
+                                                                                <span class="input-group-btn">
+                                                                                    <h:commandLink action="#{examBean.findQuestion()}" class="btn btn-white btn-raised btn-fab btn-fab-mini">
+                                                                                        <f:ajax execute="courseId numOfQuestion txt-question-id" render="question-info question-info-form add-question-to-list-form add-question-to-list" />
+                                                                                        <i class="material-icons">search</i>
+                                                                                    </h:commandLink>
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <h:panelGroup id="question-info">
+                                                                        <h:panelGroup id="question-info-form" rendered="#{examBean.foundQuestion != null}">
+                                                                            <div class="row">
+                                                                                <div class="form-group col-md-12">
+                                                                                    <label class="control-label">Question</label>
+                                                                                    <h:inputTextarea value="#{examBean.foundQuestion.content}" rows="1" class="form-control" readonly="true"/>
+                                                                                    <span class="help-block">200 characters</span>
+                                                                                </div>
+                                                                                <div class="form-group col-md-6">
+                                                                                    <label class="control-label">Type</label>
+                                                                                    <div class="">
+                                                                                        <div class="form-group">
+                                                                                            <label class="control-label"></label>
+                                                                                            <h:inputText value="#{examBean.foundQuestion.questionTypeId.title}" class="form-control" readonly="true"/>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="form-group col-md-6">
+                                                                                    <label class="control-label">Course</label>
+                                                                                    <div class="">
+                                                                                        <div class="form-group">
+                                                                                            <label class="control-label"></label>
+                                                                                            <h:inputText value="#{examBean.foundQuestion.courseId.name}" class="form-control" readonly="true"/>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </h:panelGroup>
+                                                                    </h:panelGroup>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <h:panelGroup id="add-question-to-list-form" class="col-md-offset-1 col-md-10">
+                                                                    <h:commandButton id="add-question-to-list" value="Add Question" type="button" class="btn btn-simple btn-primary" rendered="#{examBean.foundQuestion != null}">
+                                                                        <f:ajax execute="" listener="#{examBean.addQuestionToList()}" render="question-datatables-form question-datatables question-info question-info-form add-question-to-list-form add-question-to-list"/>
+                                                                    </h:commandButton>
+                                                                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Close</button>
+                                                                </h:panelGroup>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--/Question Modal-->
+                                        </div>
+                                        <!--/Modal-->
                                     </h:form>
                                 </div>
                             </div>
                         </div>
+
+
                     </div>
                 </div>
                 <ui:include src="../../WEB-INF/template/footer-include.xhtml" />

@@ -61,7 +61,7 @@ public class ExamBean implements Serializable {
     public List<Exam> getExamList() {
         return examFacade.findAll();
     }
-    
+
     public List<Course> getCourseList() {
         return courseFacade.findAll();
     }
@@ -74,13 +74,15 @@ public class ExamBean implements Serializable {
 
     private String studentId;
     private Student foundStudent;
-    
+
     private String classId;
     private entity.Class foundClass;
 
     private String questionId;
+    private Question foundQuestion;
+
     private String courseId;
-    
+
     private List<entity.Class> classList;
 
     @PostConstruct
@@ -98,71 +100,48 @@ public class ExamBean implements Serializable {
             students.add(foundStudent);
         }
     }
-    
-    public void removeStudentFromList(String id) {
-        for (Student student : students) {
-            if (student.getId().equals(id)) {
-                students.remove(student);
-                break;
-            }
-        }
+
+    public void removeStudentFromList(Student student) {
+        students.remove(student);
     }
 
     public void addClassToList() {
-        if (classId != null) {
-            entity.Class c = classFacade.find(classId);
-            if (c != null) {
-                List<Student> classStudents = c.getStudentList();
-                if (classStudents != null && !classStudents.isEmpty()) {
-                    if (students != null && !students.isEmpty()) {
-                        for (Student student : classStudents) {
-                            if (!students.contains(student) && student.getStatus()) {
-                                students.add(student);
-                            }
+        if (foundClass != null) {
+            List<Student> classStudents = foundClass.getStudentList();
+            if (classStudents != null && !classStudents.isEmpty()) {
+                if (students != null && !students.isEmpty()) {
+                    for (Student student : classStudents) {
+                        if (!students.contains(student) && student.getStatus()) {
+                            students.add(student);
                         }
-                        foundClass = null;
-                        classId = "";
-                    } else {
-                        students = classStudents;
                     }
+                    foundClass = null;
+                    classId = "";
+                } else {
+                    students = classStudents;
                 }
-                // else class has no student
             }
-            // else class not found
+            // else class has no student
         }
-        // classId is empty
     }
+    
 
     public void addQuestionToList() {
+        int k = numOfQuestion;
         if (questions.size() < numOfQuestion) {
-            if (questionId != null) {
-                Question q = null;
-                boolean isContained = false;
-                if (!questions.isEmpty()) {
-                    for (Question question : questions) {
-                        if (question.getId().equals(questionId)) {
-                            isContained = true;
-                            break;
-                        }
-                    }
-                    if (!isContained) {
-                        q = questionFacade.findAvailableQuestionById(questionId);
-                    }
-                    // else question is already contained in the list
-                } else {
-                    q = questionFacade.findAvailableQuestionById(questionId);
+            if (foundQuestion != null) {
+                if (questions.contains(foundQuestion)) {
+                    questions.add(foundQuestion);
                 }
-                if (q != null) {
-                    questions.add(q);
-                }
-                // else questions not found
+                // else questions already contains foundquestion
             }
-            // else questionId is empty
+            // else question not found
         }
         // else max number of question reached
     }
 
     public void addQuestionToListAuto() {
+        numOfQuestion = 5;
         int remain = numOfQuestion - questions.size();
         if (remain > 0) {
             if (courseId != null) {
@@ -193,7 +172,7 @@ public class ExamBean implements Serializable {
         }
         // else max number of question reached
     }
-    
+
     public void findClass() {
         String id = classId;
         entity.Class temp = classFacade.find(id);
@@ -212,13 +191,25 @@ public class ExamBean implements Serializable {
             foundClass.setStudentList(temps);
         }
     }
-    
+
     public void findStudent() {
         String id = studentId;
         Student temp = studentFacade.find(id);
         if (temp != null && temp.getStatus()) {
             foundStudent = temp;
         }
+    }
+
+    public void findQuestion() {
+        String id = questionId;
+        Question temp = questionFacade.find(id);
+        if (temp != null && temp.getStatus()) {
+            if (temp.getCourseId().getId().equals(courseId)) {
+                foundQuestion = temp;
+            }
+            // else question not belong to the course
+        }
+        // else question not found
     }
 
     public String createExam() {
@@ -235,7 +226,7 @@ public class ExamBean implements Serializable {
         exam.setDuration(duration);
         examFacade.create(exam);
         createExamStudent(exam);
-        return "index?faces-redirect=true";
+        return "exam-list?faces-redirect=true";
     }
 
     private void createExamStudent(Exam exam) {
@@ -251,13 +242,9 @@ public class ExamBean implements Serializable {
         }
 
     }
-       
+
     public java.util.Date compareTime(int duration) {
         return new java.util.Date(new java.util.Date().getTime() - (duration * 60000));
-    }
-    
-    public boolean isClassFound() {
-        return foundClass != null;
     }
 
     public String getDescription() {
@@ -347,6 +334,13 @@ public class ExamBean implements Serializable {
     public void setFoundClass(Class foundClass) {
         this.foundClass = foundClass;
     }
-    
-    
+
+    public Question getFoundQuestion() {
+        return foundQuestion;
+    }
+
+    public void setFoundQuestion(Question foundQuestion) {
+        this.foundQuestion = foundQuestion;
+    }
+
 }
