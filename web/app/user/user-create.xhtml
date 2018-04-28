@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <h:head>
+        <ui:include src="../../WEB-INF/template/css-include.xhtml" />
+        <title>Create Question | Exam Online System</title>
+    </h:head>
+    <h:body>
+        <div class="wrapper">
+            <ui:include src="../../WEB-INF/template/sidebar-include.xhtml" />
+            <div class="main-panel">
+                <ui:include src="../../WEB-INF/template/nav-include.xhtml" />
+                <div class="content">
+                    <div class="container-fluid">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header card-header-icon" data-background-color="rose">
+                                    <i class="material-icons">account_box</i>
+                                </div>
+                                <div class="card-content">
+                                    <h4 class="card-title">Create New User</h4>
+                                    <h:form id="RegisterValidation" >
+                                        <div class="form-group label-floating is-empty">
+                                            <label class="control-label">Full Name *</label>
+                                            <h:inputText class="form-control" value="#{userBean.name}" id="name" required="true" a:aria-required="true"/>
+                                            <span class="material-input"></span>
+                                        </div>
+
+                                        <div class="form-group label-floating is-empty">
+                                            <label class="control-label">Email address *</label>
+                                            <h:inputText a:type="email" value="#{userBean.email}" id="email" class="form-control" 
+                                                         requiredMessage="Please enter your email address."
+                                                         required="true" a:aria-required="true" >
+                                                
+                                                         
+                                            </h:inputText>
+                                            
+                                            <span class="material-input"></span>
+                                        </div>
+
+                                        <div class="form-group label-floating is-empty">
+
+                                            <h:selectOneMenu class="selectpicker" a:data-style="btn dropdown-toggle bs-placeholder select-with-transition" title="Choose Role" value="#{userBean.roleId}"
+                                                             required="true" a:aria-required="true">
+                                                <f:selectItem itemValue="" itemLabel="Choose Role" itemDisabled="true" />
+                                                <f:selectItems value="#{userBean.listRoles()}" var="r" itemValue="#{r.id}" itemLabel="#{r.name}" />
+                                            </h:selectOneMenu>
+
+
+                                        </div>
+
+                                        <div class="form-group label-floating is-empty">
+                                            <label class="control-label">
+                                                Password
+                                                <small>*</small>
+                                            </label>
+                                            <h:inputSecret class="form-control" a:id="registerPassword" value="#{userBean.password}" required="true" a:aria-required="true" a:minlength="6"/>
+                                            <span class="material-input"></span>
+                                        </div>
+
+                                        <div class="form-group label-floating is-empty">
+                                            <label class="control-label">
+                                                Confirm Password
+                                                <small>*</small>
+                                            </label>
+                                            <h:inputSecret class="form-control" id="registerPasswordConfirmation" required="true" a:equalto="#registerPassword" a:aria-required="true"/>
+                                            <span class="material-input"></span>
+                                        </div>
+
+                                        <div class="col-md-7">
+                                                <div class="checkbox form-horizontal-checkbox">
+                                                    <label>
+                                                        <h:selectBooleanCheckbox  value="#{userBean.status}">
+                                                            
+                                                            Available?
+                                                        </h:selectBooleanCheckbox>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        
+                                        <div class="col-md-3">
+                                            <h:commandButton type="submit" action="#{userBean.createUser()}" value="Submit" class="btn btn-fill btn-rose"></h:commandButton>    
+                                        </div>
+                                        
+                                        <h:commandButton class="btn" type="reset" value="Reset"><div class="ripple-container"></div></h:commandButton>
+                                    </h:form>
+                                    
+                                    
+                                    
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ui:include src="../../WEB-INF/template/footer-include.xhtml" />
+            </div>
+        </div>
+    </h:body>
+
+    <ui:include src="../../WEB-INF/template/js-include.xhtml" />
+
+    
+    <script type="text/javascript">
+    function setFormValidation(id) {
+        $(id).validate({
+            errorPlacement: function(error, element) {
+                $(element).closest('div').addClass('has-error');
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        setFormValidation('#RegisterValidation');
+    });
+</script>
+</html>
+
