@@ -50,4 +50,30 @@ public class UserFacade extends AbstractFacade<User> {
         // else  email or/and password is empty
         return user;
     }
+    
+    public String generateUserId() {
+        User u = findLast();
+        if (u != null) {
+            String id = u.getId();
+            if (!id.equals("U999999")) {
+                int number = Integer.parseInt(id.substring(1)) + 1;
+                return "U" + String.format("%06d", number);
+            }
+        }
+        return "U000001";
+    }
+    
+    public User findLast() {
+        String findLast = "SELECT u FROM User u ORDER BY u.id DESC";
+        User u = null;
+        try {
+            u = (User) em.createQuery(findLast, User.class)
+                    .setMaxResults(1)
+                    .getResultList()
+                    .get(0);
+        } catch (ArrayIndexOutOfBoundsException e) {
+
+        }
+        return u;
+    }
 }

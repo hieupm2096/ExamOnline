@@ -1,0 +1,117 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <ui:include src="../../WEB-INF/template/css-include.xhtml" />
+        <title>Question Details | Exam Online System</title>
+    </h:head>
+    <h:body>
+        <div class="wrapper">
+            <ui:include src="../../WEB-INF/template/sidebar-include.xhtml" />
+            <div class="main-panel">
+                <ui:include src="../../WEB-INF/template/nav-include.xhtml" />
+                <div class="content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="card">
+                                <h:form id="u-update" class="form-horizontal">
+                                    <div class="card-header card-header-icon" data-background-color="rose">
+                                        <h4 class="card-title"><em># #{userBean.id} </em></h4>
+                                    </div>
+                                    <div class="card-content">
+                                        <div class="row" />
+                                        <div class="row">
+                                            <label class="col-md-3 label-on-left">Name</label>
+                                            <div class="col-md-6">
+                                                <div class="form-group label-floating">
+                                                    <label class="control-label"></label>
+                                                    <h:inputTextarea value="#{userBean.name}" class="form-control" rows="1" a:placeholder="Name..." a:required="true" a:maxlength="200" />
+                                                    <span class="help-block">200 characters</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-md-3 label-on-left">Email</label>
+                                            <div class="col-md-6">
+                                                <div class="form-group label-floating">
+                                                    <label class="control-label"></label>
+                                                    <h:inputTextarea value="#{userBean.email}" class="form-control" rows="1" a:placeholder="Name..." a:required="true" a:maxlength="200" />
+                                                    <span class="help-block">200 characters</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <label class="col-md-3 label-on-left">Password</label>
+                                            <div class="col-md-6">
+                                                <div class="form-group label-floating">
+                                                    <label class="control-label"></label>
+                                                    <h:inputTextarea value="#{userBean.password}" class="form-control" rows="1" a:placeholder="Name..." a:required="true" a:maxlength="200" />
+                                                    <span class="help-block">200 characters</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <label class="col-md-3 label-on-left">Role</label>
+                                            <div class="col-md-6">
+                                                <h:selectOneMenu class="selectpicker" a:data-style="btn dropdown-toggle bs-placeholder select-with-transition" title="Choose Role"
+                                                                 
+                                                                 value="#{userBean.roleId}" label="#{userBean.getRoleFromId(userBean.roleId).name}">
+                                                    <f:selectItems value="#{userBean.listRoles()}" var="r" itemValue="#{r.id}" itemLabel="#{r.name}" />
+                                                
+                                            </h:selectOneMenu>
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                        
+                                        <div class="row">
+                                            <label class="col-md-3 label-on-left">Status</label>
+                                            <div class="col-md-7">
+                                                <div class="checkbox form-horizontal-checkbox">
+                                                    <label>
+                                                        <h:selectBooleanCheckbox value="#{userBean.status}">
+                                                            <span class="checkbox-material">
+                                                            </span> Available?
+                                                        </h:selectBooleanCheckbox>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div style="height: 50px; display: block;" />
+
+                                        <div style="height: 30px; display: block;" />
+                                        <div class="row">
+                                            <div class="col-md-offset-7 col-md-5">
+                                                <div class="form-group form-button">
+                                                    <h:commandButton type="submit" action="#{userBean.updateUser()}" class="btn btn-fill btn-rose btn-lg" value="Update" />
+                                                    <h:commandButton type="reset" class="btn btn-fill btn-rose btn-lg" value="reset" />
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div style="height: 70px; display: block;" />
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ui:include src="../../WEB-INF/template/footer-include.xhtml" />
+            </div>
+        </div>
+                        
+
+    </h:body>
+
+    <ui:include src="../../WEB-INF/template/js-include.xhtml" />
+
+</html>
+

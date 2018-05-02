@@ -84,6 +84,34 @@
                         </ul>
                     </div>
                 </li>
+                
+                <li class="#{request.requestURI.contains('/user/') ? 'active' : ''}">
+                    <a data-toggle="collapse" href="#users">
+                        <i class="material-icons">account_box</i>
+                        <p> Users
+                            <b class="caret"></b>
+                        </p>
+                    </a>
+                    
+                    <div class="collapse #{request.requestURI.contains('/user/') ? 'in' : ''}" id="users">
+                        <ul class="nav">
+                            <li class="#{request.requestURI == '/ExamOnline/app/user/user-list.xhtml' || request.requestURI == '/ExamOnline/app/user/user-details.xhtml' ? 'active' : ''}">
+                                <a href="http://localhost:8080/ExamOnline/app/user/user-list.xhtml">
+                                    <span class="sidebar-mini"> L </span>
+                                    <span class="sidebar-normal"> User List </span>
+                                </a>
+                            </li>
+                            
+                            <li class="#{request.requestURI == '/ExamOnline/app/user/user-create.xhtml' ? 'active' : null}">
+                                <a href="http://localhost:8080/ExamOnline/app/user/user-create.xhtml">
+                                    <span class="sidebar-mini"> C </span>
+                                    <span class="sidebar-normal"> Create User </span>
+                                </a>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                </li>
             </ul>
         </div>
     </div>

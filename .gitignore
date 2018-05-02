@@ -1,1 +1,6 @@
 /dist/
+/nbproject/private/
+/build/
+web/WEB-INF/faces-config.xml
+nbproject/project.properties
+nbproject/project.xml

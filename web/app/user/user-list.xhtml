@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+    <h:head>
+        <ui:include src="../../WEB-INF/template/css-include.xhtml" />
+        <title>Users | Exam Online System</title>
+    </h:head>
+    <h:body>
+        <div class="wrapper">
+            <ui:include src="../../WEB-INF/template/sidebar-include.xhtml" />
+            <div class="main-panel">
+                <ui:include src="../../WEB-INF/template/nav-include.xhtml" />
+                <div class="content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="card">
+                                <div class="card-header card-header-icon" data-background-color="rose">
+                                    <i class="material-icons">account_circle</i>
+                                </div>
+                                <div class="card-content">
+                                    <h4 class="card-title">Users</h4>
+                                    <div class="toolbar">
+
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="table-responsive material-datatables">
+                                                <h:dataTable value="#{userBean.findAll()}" var="u" 
+                                                             class="table table-striped table-no-bordered table-hover" 
+                                                             id="datatables" cellspacing="0" width="100%" style="width:100%"
+                                                             columnClasses=",,,,,text-center">
+                                                    <h:column>
+                                                        <f:facet name="header">#</f:facet>
+                                                            #{u.id}
+                                                    </h:column>
+                                                    <h:column>
+                                                        <f:facet name="header">User Name</f:facet>
+                                                            #{u.name}
+                                                    </h:column>
+                                                    <h:column>
+                                                        <f:facet name="header">Email</f:facet>
+                                                            #{u.email}
+                                                    </h:column>
+                                                    <h:column>
+                                                        <f:facet name="header">Role</f:facet>
+                                                            #{u.roleId.name}
+                                                    </h:column>
+                                                    <h:column>
+                                                        <f:facet name="header">Status</f:facet>
+                                                            #{u.status ? 'Available' : 'N/A'}
+                                                    </h:column>
+                                                    <h:column headerClass="disabled-sorting text-center td-actions">
+                                                        <f:facet name="header">Actions</f:facet>
+                                                        <h:form id="rq-form">
+                                                            <h:commandLink class="btn btn-simple btn-info btn-icon edit" 
+                                                                           action="#{userBean.updateUser(u)}" rel="tooltip" a:data-original-title="User Details">
+                                                                <i class="material-icons">edit</i>
+                                                                
+                                                            </h:commandLink>
+
+                                                            <h:commandLink 
+                                                                action="#{userBean.removeUser(u)}" 
+                                                                class="btn btn-simple btn-danger btn-icon remove" 
+                                                                rel="tooltip" a:data-original-title="Remove User">
+                                                                <i class="material-icons">close</i>
+                                                            </h:commandLink>
+                                                        </h:form>
+                                                    </h:column>
+                                                </h:dataTable>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="height: 20px; display: block;" />
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <h:link class="btn btn-rose btn-lg" outcome="user-create">
+                                                <i class="material-icons">add_box</i>
+                                                <h:outputText value="   Create New User" />
+                                            </h:link>
+                                        </div>
+                                    </div>
+                                    <div style="height: 50px; display: block;" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ui:include src="../../WEB-INF/template/footer-include.xhtml" />
+            </div>
+        </div>
+    </h:body>
+
+    <ui:include src="../../WEB-INF/template/js-include.xhtml" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#datatables').DataTable({
+                "pagingType": "full_numbers",
+                "lengthMenu": [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, "All"]
+                ],
+                responsive: true,
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "Search records"
+                }
+
+            });
+
+            var table = $('#datatables').DataTable();
+
+        });
+    </script>
+</html>
+
