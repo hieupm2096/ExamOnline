@@ -58,7 +58,7 @@
                                                         <f:facet name="header">Actions</f:facet>
                                                         <h:form id="rq-form">
                                                             <h:commandLink class="btn btn-simple btn-info btn-icon edit" 
-                                                                           action="#{userBean.updateUser(u)}" rel="tooltip" a:data-original-title="User Details">
+                                                                           action="#{userBean.prepareUserDetails(u)}" rel="tooltip" a:data-original-title="User Details">
                                                                 <i class="material-icons">edit</i>
                                                                 
                                                             </h:commandLink>
@@ -68,6 +68,7 @@
                                                                 class="btn btn-simple btn-danger btn-icon remove" 
                                                                 rel="tooltip" a:data-original-title="Remove User">
                                                                 <i class="material-icons">close</i>
+                                                                
                                                             </h:commandLink>
                                                         </h:form>
                                                     </h:column>

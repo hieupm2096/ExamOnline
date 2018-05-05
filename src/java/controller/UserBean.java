@@ -13,8 +13,10 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
-import javax.enterprise.context.SessionScoped;
+import javax.enterprise.context.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import javax.servlet.http.HttpSession;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -22,10 +24,10 @@ import org.slf4j.LoggerFactory;
  * @author Arthas
  */
 @Named("userBean")
-@SessionScoped
+@RequestScoped
 public class UserBean implements Serializable{
     @EJB
-    private UserFacade userFacade;
+    private UserFacade userFacade = new UserFacade();
     
     @EJB
     private RoleFacade roleFacade;
@@ -137,22 +139,22 @@ public class UserBean implements Serializable{
 
         LOGGER.info("Created: " + user.getId() + ": " + user.getName());
         
-        user = new User();
+        
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            return "user-list?faces-redirect=true";
+            
         }
         
+        finally {
+        user = new User();
         return "user-list?faces-redirect=true";
+        }
+        
     }
     
-    public String updateUser(User user){
-        this.id = user.getId();
-        this.name = user.getName();
-        this.email = user.getEmail();
-        this.password = user.getPassword();
-        this.roleId = user.getRoleId().getId();
-        this.status = user.getStatus();
+    public String prepareUserDetails(User u){
+        HttpSession session = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+        session.setAttribute("selectedUserId", u.getId());
         return "user-details?faces-redirect=true";
     }
     
@@ -160,8 +162,22 @@ public class UserBean implements Serializable{
         prepUser();
         user.setId(id);    
         this.userFacade.edit(user);
-        user = new User();
-        return "user-list?faces-redirect=true";
+        return "user-details?faces-redirect=true";
+    }
+    
+    
+    public void getSelectedUser(){
+        HttpSession session = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+        String selected = session.getAttribute("selectedUserId").toString();
+        if (selected != null) {
+            User selectedUser = userFacade.find(selected);
+            id = selectedUser.getId();
+            name = selectedUser.getName();
+            email = selectedUser.getEmail();
+            password = selectedUser.getPassword();
+            roleId = selectedUser.getRoleId().getId();
+            status = selectedUser.getStatus();
+        }
     }
     
     
@@ -172,5 +188,7 @@ public class UserBean implements Serializable{
      */
     public UserBean() {
     }
-    
-}
+
+  
+    }
+

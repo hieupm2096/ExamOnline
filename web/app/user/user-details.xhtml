@@ -9,6 +9,10 @@
     <h:head>
         <ui:include src="../../WEB-INF/template/css-include.xhtml" />
         <title>Question Details | Exam Online System</title>
+        <f:metadata>
+            <f:viewAction action="#{userBean.getSelectedUser()}" />
+        </f:metadata>
+        
     </h:head>
     <h:body>
         <div class="wrapper">
@@ -22,6 +26,7 @@
                                 <h:form id="u-update" class="form-horizontal">
                                     <div class="card-header card-header-icon" data-background-color="rose">
                                         <h4 class="card-title"><em># #{userBean.id} </em></h4>
+                                        <h:inputHidden value="#{userBean.id}"/>
                                     </div>
                                     <div class="card-content">
                                         <div class="row" />
@@ -30,7 +35,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group label-floating">
                                                     <label class="control-label"></label>
-                                                    <h:inputTextarea value="#{userBean.name}" class="form-control" rows="1" a:placeholder="Name..." a:required="true" a:maxlength="200" />
+                                                    <h:inputText value="#{userBean.name}" class="form-control" a:rows="1" a:placeholder="Name..." a:required="true" a:maxlength="30" />
                                                     <span class="help-block">200 characters</span>
                                                 </div>
                                             </div>
@@ -40,8 +45,12 @@
                                             <div class="col-md-6">
                                                 <div class="form-group label-floating">
                                                     <label class="control-label"></label>
-                                                    <h:inputTextarea value="#{userBean.email}" class="form-control" rows="1" a:placeholder="Name..." a:required="true" a:maxlength="200" />
+                                                    <h:inputText value="#{userBean.email}" class="form-control" a:rows="1" a:placeholder="Email..." a:required="true" a:maxlength="100">
+                                                        <f:validator binding="#{userValidation}"/>
+                                                        <f:attribute name="selectedId" value="#{userBean.id}" /> 
+                                                    </h:inputText>
                                                     <span class="help-block">200 characters</span>
+                                                    <h:messages style = "color:red;margin:8px;" /> 
                                                 </div>
                                             </div>
                                         </div>
@@ -51,7 +60,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group label-floating">
                                                     <label class="control-label"></label>
-                                                    <h:inputTextarea value="#{userBean.password}" class="form-control" rows="1" a:placeholder="Name..." a:required="true" a:maxlength="200" />
+                                                    <h:inputText value="#{userBean.password}" class="form-control" a:rows="1" a:placeholder="Password..." a:required="true" a:maxlength="200" />
                                                     <span class="help-block">200 characters</span>
                                                 </div>
                                             </div>
@@ -91,7 +100,11 @@
                                         <div class="row">
                                             <div class="col-md-offset-7 col-md-5">
                                                 <div class="form-group form-button">
-                                                    <h:commandButton type="submit" action="#{userBean.updateUser()}" class="btn btn-fill btn-rose btn-lg" value="Update" />
+                                                    <h:commandButton type="submit" action="#{userBean.updateUser()}" class="btn btn-fill btn-rose btn-lg" value="Update">
+                                                        <f:param name="createOrUpdate" value="update"/>
+                                                        
+                                                        
+                                                    </h:commandButton>
                                                     <h:commandButton type="reset" class="btn btn-fill btn-rose btn-lg" value="reset" />
                                                 </div>
                                             </div>
