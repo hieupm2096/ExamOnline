@@ -9,7 +9,9 @@
     <h:head>
         <ui:include src="../../WEB-INF/template/css-include.xhtml" />
         <title>Create Question | Exam Online System</title>
-
+        <f:metadata>
+            <f:viewAction action="#{userBean.prepareCreate()}" />
+        </f:metadata>
 
 
     </h:head>
@@ -30,28 +32,26 @@
                                     <h:form id="Register">
                                         <div class="form-group label-floating">
                                             <label class="control-label">Full Name *</label>
-                                            <input type = "text" class="form-control" jsf:value="#{userBean.name}" id="name"
-                                                   required="true" aria-required ="true" />
+                                            <h:inputText a:type = "text" class="form-control" value="#{userBean.name}" id="name"/>
 
                                         </div>
 
                                         <div class="form-group label-floating">
                                             <label class="control-label">Email address *</label>
-                                            <input type="email" jsf:value="#{userBean.email}" id="userEmail" class="form-control"
-                                                   required="true" aria-required="true"> 
+                                            <h:inputText a:type="email" value="#{userBean.email}" id="userEmail" class="form-control"> 
                                                 <f:validator binding="#{userValidation}"/>
-                                            </input>
-                                            <h:messages style = "color:red;margin:8px;" /> 
+                                                <f:ajax event="blur" render="emailMessage" />
+                                            </h:inputText>
+                                            <h:message style = "color:red;margin:8px;" id="emailMessage" for="userEmail"/> 
 
                                         </div>
 
                                         <div class="form-group label-floating">
-                                            <select class="selectpicker" data-style="btn select-with-transition" title="Select Role" jsf:value="#{userBean.roleId}"
-                                                    required="true" aria-required="true" id="role" data-msg="Please select a role!"
-                                                    >
+                                            <h:selectOneListbox class="selectpicker" a:data-style="btn select-with-transition" title="Select Role" value="#{userBean.roleId}"
+                                                     id="role" a:data-msg="Please select a role!" >
                                                 <f:selectItem itemDisabled="true" itemValue="" itemLabel="Select Role"></f:selectItem>
                                                 <f:selectItems value="#{userBean.listRoles()}" var="r" itemValue="#{r.id}" itemLabel="#{r.name}" />
-                                            </select>
+                                            </h:selectOneListbox>
 
                                         </div>
 
@@ -60,9 +60,9 @@
                                                 Password
                                                 <small>*</small>
                                             </label>
-                                            <input type="password" class="form-control" name="registerPassword" id="password"
-                                                   jsf:value="#{userBean.password}" required="true" aria-required="true" minlength="6"
-                                                   style="cursor: auto;"/>
+                                            <input type="password" class="form-control" id="password"
+                                                   jsf:value="#{userBean.password}" minlength="6"
+                                                   style="cursor: auto;" required="true" aria-required="true"/>
 
                                         </div>
 
@@ -71,8 +71,8 @@
                                                 Confirm Password
                                                 <small>*</small>
                                             </label>
-                                            <input type="password" class="form-control" id="passwordConfirmation" required="true" aria-required="true"
-                                                   equalto="#password" style="cursor: auto;"/>
+                                            <input type="password" class="form-control" id="passwordConfirmation"
+                                                   style="cursor: auto;" equalTo="#password" required="true" aria-required="true"/>
                                         </div>
 
                                         <div class="col-md-7">
@@ -88,17 +88,13 @@
                                         </div>
 
                                         <div class="col-md-3">
-                                            <h:commandButton type="submit" action="#{userBean.createUser()}" value="Submit" class="btn btn-fill btn-rose">
-                                                <f:param name="createOrUpdate" value="create"/>
+                                            <h:commandButton type="submit" action="#{userBean.createUser()}" value="Submit" class="btn btn-fill btn-rose" >
+                                            
                                             </h:commandButton>    
                                         </div>
 
                                         <h:commandButton class="btn" type="reset" value="Reset"><div class="ripple-container"></div></h:commandButton>
                                     </h:form>
-
-
-
-
 
                                 </div>
                             </div>
@@ -115,9 +111,8 @@
     <script>
 
 
-
-        function setFormValidation(id) {
-            $(id).validate({
+        $(document).ready(function () {
+            $("#Register").validate({
                 highlight: function (element) {
                     $(element).closest('.form-group').removeClass('has-success').addClass('has-danger');
                 },
@@ -130,12 +125,20 @@
                     $(element).closest('.form-group').append(error);
                     $(element).closest('.form-group').removeClass('has-success');
                     $(element).closest('.form-group').addClass('has-error');
-                },
+                }, 
+                rules:{
+                    "Register:name": {
+                        required: true
+                    },
+                    "Register:userEmail":{
+                        required: true
+                    },
+                    "Register:role":{
+                        required: true
+                    }
+                    
+                }
             });
-        }
-
-        $(document).ready(function () {
-            setFormValidation('#Register');
         });
 
 

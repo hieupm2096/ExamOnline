@@ -130,6 +130,11 @@ public class UserBean implements Serializable{
             user.setRoleId(getRoleFromId(roleId));
     }
     
+    public void prepareCreate(){
+        HttpSession session = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+        session.setAttribute("createOrUpdate", "create");
+        }
+    
     public String createUser(){
         try {
             prepUser();
@@ -155,14 +160,19 @@ public class UserBean implements Serializable{
     public String prepareUserDetails(User u){
         HttpSession session = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(true);
         session.setAttribute("selectedUserId", u.getId());
+        session.setAttribute("createOrUpdate", "update");
         return "user-details?faces-redirect=true";
     }
     
     public String updateUser(){
         prepUser();
         user.setId(id);    
-        this.userFacade.edit(user);
-        return "user-details?faces-redirect=true";
+        try {
+            this.userFacade.edit(user);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+        }
+        return "user-list?faces-redirect=true";
     }
     
     

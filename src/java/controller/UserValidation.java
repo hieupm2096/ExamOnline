@@ -16,7 +16,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -33,9 +32,8 @@ public class UserValidation implements Validator {
 
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
-        String operation = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getParameter("createOrUpdate");
         HttpSession session = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-        String selectedUserId = session.getAttribute("selectedUserId").toString();
+        String operation = session.getAttribute("createOrUpdate").toString();
                 
         String emailString = (String) value;
         
@@ -47,6 +45,7 @@ public class UserValidation implements Validator {
                 throw new ValidatorException(message);
             }
         } else if (operation.equals("update")) {
+            String selectedUserId = session.getAttribute("selectedUserId").toString();
              User checkById = this.userFacade.checkEmail(emailString, selectedUserId);
             if (checkById != null) {
             FacesMessage message = new FacesMessage("Email already exists!");
