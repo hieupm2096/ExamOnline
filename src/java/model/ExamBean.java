@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package model;
 
 import entity.Class;
 import entity.Course;
@@ -12,6 +12,7 @@ import entity.ExamStudent;
 import entity.ExamStudentPK;
 import entity.Question;
 import entity.Student;
+import entity.User;
 import facade.ClassFacade;
 import facade.CourseFacade;
 import facade.ExamFacade;
@@ -26,10 +27,12 @@ import java.util.List;
 import java.util.Random;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,6 +80,7 @@ public class ExamBean implements Serializable {
         return courseFacade.findByStatus(true);
     }
 
+    private String id;
     private String description;
     private int numOfQuestion;
     private int duration;
@@ -95,6 +99,9 @@ public class ExamBean implements Serializable {
     private String courseId;
 
     private List<entity.Class> classList;
+
+    private User user;
+    private Exam exam;
 
     @PostConstruct
     public void init() {
@@ -253,7 +260,7 @@ public class ExamBean implements Serializable {
 
         // get user id of current login user
         String userId = authenticationBean.getLoginUser().getId();
-        
+
         Exam exam = new Exam();
         exam.setId(id);
         exam.setDescription(description);
@@ -297,7 +304,42 @@ public class ExamBean implements Serializable {
     }
 
     public java.util.Date compareTime(int duration) {
-        return new java.util.Date(new java.util.Date().getTime() - (duration * 60000));
+        return new java.util.Date(new java.util.Date().getTime() - ((duration + 15) * 60000));
+    }
+
+    public void findExam() {
+        String inputId = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getParameter("id");
+        if (inputId != null) {
+            exam = examFacade.find(inputId);
+            id = exam.getId();
+            courseId = exam.getCourseId().getId();
+            description = exam.getDescription();
+
+            questions = exam.getQuestionList();
+            numOfQuestion = questions.size();
+
+            duration = exam.getDuration();
+
+            user = exam.getUserId();
+
+        }
+    }
+
+    public boolean isExamStarted() {
+        return exam.getStartTime() != null;
+    }
+
+    public boolean isExamOngoing() {
+        java.util.Date compareTime = new java.util.Date(new java.util.Date().getTime() - ((duration + 15) * 60000)); // 15 minutes is adding time for student to login
+        return isExamStarted() && exam.getStartTime().after(compareTime);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getDescription() {

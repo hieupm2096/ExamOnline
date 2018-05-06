@@ -5,7 +5,7 @@
  */
 package filter;
 
-import controller.AuthenticationBean;
+import model.AuthenticationBean;
 import java.io.IOException;
 import javax.inject.Inject;
 import javax.servlet.Filter;
@@ -59,12 +59,15 @@ public class AuthenticationFilter implements Filter {
     /**
      * Destroy method for this filter
      */
+    @Override
     public void destroy() {        
     }
 
     /**
      * Init method for this filter
+     * @param filterConfig
      */
+    @Override
     public void init(FilterConfig filterConfig) {        
 
     }

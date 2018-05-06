@@ -1,12 +1,107 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:head>
-        <title>Facelet Title</title>
+        <ui:include src="../../WEB-INF/template/css-include.xhtml" />
+        <title>Exam Details | Exam Online System</title>
+        <f:metadata>
+            <f:viewAction action="#{examBean.findExam()}" />
+        </f:metadata>
     </h:head>
     <h:body>
-        Hello from Facelets
+        <div class="wrapper">
+            <ui:include src="../../WEB-INF/template/sidebar-include.xhtml" />
+            <div class="main-panel">
+                <ui:include src="../../WEB-INF/template/nav-include.xhtml" />
+                <div class="content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="card">
+                                <h:form id="e-detail" class="form-horizontal">
+                                    <div class="card-header card-header-icon" data-background-color="rose">
+                                        <h4 class="card-title"><em># #{examBean.id} </em></h4>
+                                    </div>
+                                    <div class="card-content">
+                                        <div class="row" />
+                                        <div class="row">
+                                            <label class="col-md-3 label-on-left">Description</label>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label"></label>
+                                                    <h:inputTextarea value="#{examBean.description}"
+                                                                     class="form-control" rows="1"
+                                                                     a:required="true" a:maxlength="200" />
+                                                    <span class="help-block">200 characters</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-md-3 label-on-left">Course</label>
+                                            <div class="col-md-3">
+                                                <h:selectOneMenu value="#{examBean.courseId}" class="selectpicker" disabled="true"
+                                                                 a:data-style="btn btn-primary btn-round" a:title="Choose course" a:required="true">
+                                                    <f:selectItem itemLabel="Choose course" itemDisabled="true" />
+                                                    <f:selectItems value="#{examBean.courseList}" var="c" itemValue="#{c.id}" itemLabel="#{c.name}" />
+                                                </h:selectOneMenu>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-md-3 label-on-left">Duration (min)</label>
+                                            <div class="col-md-2">
+                                                <h:selectOneMenu value="#{examBean.duration}"
+                                                                 class="selectpicker" 
+                                                                 a:data-style="select-with-transition" a:required="true">
+                                                    <f:selectItem itemLabel="Duration" itemDisabled="true" />
+                                                    <f:selectItem itemValue="15" itemLabel="15" />
+                                                    <f:selectItem itemValue="30" itemLabel="30" />
+                                                    <f:selectItem itemValue="45" itemLabel="45" />
+                                                    <f:selectItem itemValue="60" itemLabel="60" />
+                                                    <f:selectItem itemValue="90" itemLabel="90" />
+                                                    <f:selectItem itemValue="120" itemLabel="120" />
+                                                </h:selectOneMenu>
+                                            </div>
+
+                                            <label class="col-md-2 label-on-left">Number of question</label>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <h:inputText value="#{examBean.numOfQuestion}" 
+                                                                 class="form-control"
+                                                                 a:required="true" a:type="number" a:min="5" a:max="1000" />
+                                                    <span class="help-block">At least 5 questions, maximum 1000 questions</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-md-3 label-on-left">Start Time: </label>
+                                            <h:panelGroup rendered="#{!examBean.examStarted}">
+                                                <span class="text-muted">Pending</span>
+                                            </h:panelGroup>
+                                            <h:panelGroup rendered="#{examBean.examOngoing}">
+                                                
+                                            </h:panelGroup>
+                                            <h:panelGroup rendered="#{!examBean.examOngoing}">
+                                                
+                                            </h:panelGroup>
+                                        </div>
+                                    </div>
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ui:include src="../../WEB-INF/template/footer-include.xhtml" />
+            </div>
+        </div>
+
     </h:body>
+    <ui:include src="../../WEB-INF/template/js-include.xhtml" />
+    <script>
+
+    </script>
 </html>
 

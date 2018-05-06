@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 @Stateless
 public class UserFacade extends AbstractFacade<User> {
     
-    private Logger LOGGER = LoggerFactory.getLogger(UserFacade.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(UserFacade.class);
 
     @PersistenceContext(unitName = "ExamOnlinePU")
     private EntityManager em;
