@@ -23,12 +23,12 @@ import facade.UserFacade;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -47,6 +47,8 @@ public class ExamBean implements Serializable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExamBean.class);
     private static final String EXAM_LIST_REDIRECT = "exam-list?faces-redirect=true";
+
+    private final int EXTEND_DURATION = 15;
 
     @EJB
     private ExamStudentFacade examStudentFacade;
@@ -101,6 +103,7 @@ public class ExamBean implements Serializable {
     private List<entity.Class> classList;
 
     private User user;
+    private Date startTime;
     private Exam exam;
 
     @PostConstruct
@@ -215,7 +218,7 @@ public class ExamBean implements Serializable {
     }
 
     public void findClass() {
-        String id = classId;
+        id = classId;
         entity.Class temp = classFacade.find(id);
         if (temp != null && temp.getStatus()) {
             foundClass = new entity.Class();
@@ -234,7 +237,7 @@ public class ExamBean implements Serializable {
     }
 
     public void findStudent() {
-        String id = studentId;
+        id = studentId;
         Student temp = studentFacade.find(id);
         if (temp != null && temp.getStatus()) {
             foundStudent = temp;
@@ -242,7 +245,7 @@ public class ExamBean implements Serializable {
     }
 
     public void findQuestion() {
-        String id = questionId;
+        id = questionId;
         Question temp = questionFacade.find(id);
         if (temp != null && temp.getStatus()) {
             if (temp.getCourseId().getId().equals(courseId)) {
@@ -256,12 +259,12 @@ public class ExamBean implements Serializable {
     }
 
     public String createExam() {
-        String id = examFacade.generateExamId();
+        id = examFacade.generateExamId();
 
         // get user id of current login user
         String userId = authenticationBean.getLoginUser().getId();
 
-        Exam exam = new Exam();
+        exam = new Exam();
         exam.setId(id);
         exam.setDescription(description);
         exam.setUserId(userFacade.find(userId));
@@ -312,15 +315,22 @@ public class ExamBean implements Serializable {
         if (inputId != null) {
             exam = examFacade.find(inputId);
             id = exam.getId();
-            courseId = exam.getCourseId().getId();
             description = exam.getDescription();
+            courseId = exam.getCourseId().getId();
+
+            duration = exam.getDuration();
 
             questions = exam.getQuestionList();
             numOfQuestion = questions.size();
 
-            duration = exam.getDuration();
+            students = new ArrayList<>();
+
+            for (ExamStudent examStudent : exam.getExamStudentList()) {
+                students.add(examStudent.getStudent());
+            }
 
             user = exam.getUserId();
+            startTime = exam.getStartTime();
 
         }
     }
@@ -330,8 +340,17 @@ public class ExamBean implements Serializable {
     }
 
     public boolean isExamOngoing() {
-        java.util.Date compareTime = new java.util.Date(new java.util.Date().getTime() - ((duration + 15) * 60000)); // 15 minutes is adding time for student to login
-        return isExamStarted() && exam.getStartTime().after(compareTime);
+        startTime = exam.getStartTime();
+        Date endTime = new Date(startTime.getTime() + ((duration + EXTEND_DURATION) * 60000));
+        return isExamStarted() && new Date().before(endTime);
+    }
+    
+    public void startExam() {
+        exam.setStartTime(new Date());
+    }
+
+    public int getEXTEND_DURATION() {
+        return EXTEND_DURATION;
     }
 
     public String getId() {
@@ -436,6 +455,22 @@ public class ExamBean implements Serializable {
 
     public void setFoundQuestion(Question foundQuestion) {
         this.foundQuestion = foundQuestion;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
     }
 
 }
