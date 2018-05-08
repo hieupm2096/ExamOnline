@@ -5,7 +5,9 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
     <h:head>
         <ui:include src="../../WEB-INF/template/css-include.xhtml" />
         <title>Exam Details | Exam Online System</title>
@@ -22,7 +24,7 @@
                     <div class="container-fluid">
                         <div class="row">
                             <div class="card">
-                                <h:form id="e-detail" class="form-horizontal">
+                                <h:form id="examDetailForm" class="form-horizontal">
                                     <div class="card-header card-header-icon" data-background-color="rose">
                                         <h4 class="card-title"><em># #{examBean.id} </em></h4>
                                     </div>
@@ -53,17 +55,8 @@
                                         <div class="row">
                                             <label class="col-md-3 label-on-left">Duration (min)</label>
                                             <div class="col-md-2">
-                                                <h:selectOneMenu value="#{examBean.duration} + #{examBean.EXTEND_DURATION}"
-                                                                 class="selectpicker" 
-                                                                 a:data-style="select-with-transition" a:required="true">
-                                                    <f:selectItem itemLabel="Duration" itemDisabled="true" />
-                                                    <f:selectItem itemValue="15" itemLabel="15" />
-                                                    <f:selectItem itemValue="30" itemLabel="30" />
-                                                    <f:selectItem itemValue="45" itemLabel="45" />
-                                                    <f:selectItem itemValue="60" itemLabel="60" />
-                                                    <f:selectItem itemValue="90" itemLabel="90" />
-                                                    <f:selectItem itemValue="120" itemLabel="120" />
-                                                </h:selectOneMenu>
+                                                <h:inputText value="#{examBean.duration} + (#{examBean.EXTEND_DURATION})"
+                                                                 class="form-control" />
                                             </div>
 
                                             <label class="col-md-2 label-on-left">Number of question</label>
@@ -100,29 +93,42 @@
                                                 </c:choose>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <label class="col-md-3 label-on-left">Start Time</label>
-                                            <div class="col-md-2">
-                                                <h:inputText value="#{examBean.startTime != null ? examBean.startTime : 'N/A'}" 
-                                                             class="form-control"
-                                                             readonly="true" />
-                                            </div>
-
-                                            <label class="col-md-2 label-on-left">Elapsed Time</label>
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <h:inputText value="#{examBean.numOfQuestion}" 
-                                                                 class="form-control"
-                                                                 a:required="true" a:type="number" a:min="5" a:max="1000" />
-                                                    <span class="help-block">At least 5 questions, maximum 1000 questions</span>
+                                        <h:panelGroup id="timerPanelGroup" class="row">
+                                            <h:panelGroup id="txtStartTime">
+                                                <label class="col-md-3 label-on-left">Start Time</label>
+                                                <div class="col-md-2">
+                                                    <h:inputText 
+                                                        value="#{examBean.examStarted ? examBean.startTime : 'N/A'}" 
+                                                        class="form-control"
+                                                        readonly="true"
+                                                        rendered="#{examBean.examStarted}" />
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <h:panelGroup class="row" rendered="#{!examBean.examStarted}">
+                                            </h:panelGroup>
+                                            <h:panelGroup id="txtElapsedTime">
+                                                <label class="col-md-2 label-on-left">Elapsed Time</label>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <pe:timer
+                                                            timeout="#{examBean.totalDuration * 60}"
+                                                            singleRun="true"
+                                                            format="HH:mm:ss"
+                                                            rendered="#{examBean.examStarted}"
+                                                            />
+                                                    </div>
+                                                </div>
+                                            </h:panelGroup>
+
+                                        </h:panelGroup>
+                                        <h:panelGroup id="startExamPanelGroup" class="row" rendered="#{!examBean.examStarted}">
                                             <div class="col-md-offset-3 col-md-6 text-right">
                                                 <h:commandLink
-                                                    class="btn btn-info btn-round">
+                                                    action="#{examBean.startExam()}"
+                                                    id="startExamButton"
+                                                    class="btn btn-info btn-round"
+                                                    rendered="#{!examBean.examStarted}">
                                                     <i class="material-icons">panorama_fish_eye</i> Start Exam
+                                                    <f:ajax render="examDetailForm:timerPanelGroup examDetailForm:txtStartTime examDetailForm:txtElapsedTime
+                                                            examDetailForm:startExamPanelGroup examDetailForm:startExamButton" />
                                                 </h:commandLink>
                                             </div>
                                         </h:panelGroup>
@@ -206,7 +212,7 @@
     <ui:include src="../../WEB-INF/template/js-include.xhtml" />
     <script>
         $(document).ready(function () {
-            $('#e-detail\\:questionDatatable').DataTable({
+            $('#examDetailForm\\:questionDatatable').DataTable({
                 "pagingType": "full_numbers",
                 "lengthMenu": [
                     [10, 25, 50, -1],
@@ -220,7 +226,7 @@
 
             });
 
-            $('#e-detail\\:studentDatatable').DataTable({
+            $('#examDetailForm\\:studentDatatable').DataTable({
                 "pagingType": "full_numbers",
                 "lengthMenu": [
                     [10, 25, 50, -1],
