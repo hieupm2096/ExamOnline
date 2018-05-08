@@ -47,6 +47,7 @@ public class ExamBean implements Serializable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExamBean.class);
     private static final String EXAM_LIST_REDIRECT = "exam-list?faces-redirect=true";
+    private static final String EXAM_DETAIL_PAGE_REDIRECT = "exam-details?faces-redirect=true";
 
     private final int EXTEND_DURATION = 15;
 
@@ -346,9 +347,11 @@ public class ExamBean implements Serializable {
     }
     
     public void startExam() {
-        exam.setStartTime(new Date());
+        startTime = new Date();
+        exam.setStartTime(startTime);
+        examFacade.edit(exam);
     }
-
+    
     public int getEXTEND_DURATION() {
         return EXTEND_DURATION;
     }
@@ -471,6 +474,10 @@ public class ExamBean implements Serializable {
 
     public void setStartTime(Date startTime) {
         this.startTime = startTime;
+    }
+    
+    public int getTotalDuration() {
+        return duration + EXTEND_DURATION;
     }
 
 }
