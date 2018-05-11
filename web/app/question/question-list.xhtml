@@ -33,7 +33,7 @@
                                                 <h:dataTable value="#{questionBean.questionList}" var="q" 
                                                              class="table table-striped table-no-bordered table-hover" 
                                                              id="datatables" cellspacing="0" width="100%" style="width:100%"
-                                                             columnClasses=",,,text-center">
+                                                             columnClasses=",,,,text-center">
                                                     <h:column>
                                                         <f:facet name="header">#</f:facet>
                                                             #{q.id}
@@ -41,6 +41,10 @@
                                                     <h:column>
                                                         <f:facet name="header">Question</f:facet>
                                                             #{q.content}
+                                                    </h:column>
+                                                    <h:column>
+                                                        <f:facet name="header">Course</f:facet>
+                                                            #{q.courseId.name}
                                                     </h:column>
                                                     <h:column>
                                                         <f:facet name="header">Status</f:facet>
