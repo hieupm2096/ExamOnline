@@ -315,7 +315,7 @@ public class ExamBean implements Serializable {
     public void findExam() {
         String inputId = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getParameter("id");
         if (inputId != null) {
-            exam = examFacade.find(inputId);
+            exam = examFacade.findExamById(inputId);
             id = exam.getId();
             description = exam.getDescription();
             courseId = exam.getCourseId().getId();
