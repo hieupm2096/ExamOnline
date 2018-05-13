@@ -31,39 +31,39 @@ import javax.servlet.http.HttpServletRequest;
 @Named(value = "courseBean")
 @RequestScoped
 public class CourseBean {
-
+    
     @EJB
     private UserFacade userFacade;
-
+    
     @EJB
     private StudentFacade studentFacade;
-
+    
     @EJB
     private QuestionFacade questionFacade;
-
+    
     @EJB
     private ExamFacade examFacade;
-
+    
     @EJB
     private CourseFacade courseFacade;
-
+    
     @EJB
     private ClassFacade classFacade;
-
+    
     @EJB
     private AnswerFacade answerFacade;
-
+    
     public List<Course> getCourseList() {
         return courseFacade.findAll();
     }
-
+    
     private String id;
     private String name;
     private String description;
     private boolean status;
     private String userId;
     private User user;
-
+    
     private List<Student> studentList;
     private List<Exam> examList;
     private List<Question> questionList;
@@ -99,10 +99,22 @@ public class CourseBean {
 //        questionFacade.create(q);
 //        return "question-list?faces-redirect=true";
 //    }
+    public List<User> getUserList() {
+        return userFacade.findAll();
+    }
+    
+    public List<Question> getQuestionList() {
+        return questionFacade.findAll();
+    }
+    
+    public List<Exam> getExamList() {
+        return examFacade.findAll();
+    }
+    
     public void findCourse() {
         String inputId = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getParameter("id");
         if (inputId != null) {
-            Course course = new Course(inputId);
+            Course course = courseFacade.find(inputId);
             id = course.getId();
             name = course.getName();
             description = course.getDescription();
@@ -110,7 +122,7 @@ public class CourseBean {
             user = course.getUserId();
         }
     }
-
+    
     public String createCourse() {
         user = userFacade.find(userId);
         Course course = new Course();
@@ -121,37 +133,45 @@ public class CourseBean {
         course.setUserId(user);
         return "course-list?faces-redirect=true";
     }
-
+    
     public String getId() {
         return id;
     }
-
+    
     public void setId(String id) {
         this.id = id;
     }
-
+    
     public String getName() {
         return name;
     }
-
+    
     public void setName(String name) {
         this.name = name;
     }
-
+    
     public String getDescription() {
         return description;
     }
-
+    
     public void setDescription(String description) {
         this.description = description;
     }
-
+    
     public User getUserId() {
         return user;
     }
-
+    
     public void setUserId(User userId) {
         this.user = userId;
     }
-
+    
+    public boolean isStatus() {
+        return status;
+    }
+    
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+    
 }
