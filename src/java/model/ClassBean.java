@@ -6,11 +6,15 @@
 package model;
 
 import entity.Class;
+import entity.Course;
 import entity.Student;
 import entity.User;
 import facade.ClassFacade;
 import facade.StudentFacade;
+import facade.UserFacade;
+import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
@@ -26,6 +30,9 @@ import javax.servlet.http.HttpServletRequest;
 public class ClassBean {
 
     @EJB
+    private UserFacade userFacade;
+
+    @EJB
     private StudentFacade studentFacade;
 
     @EJB
@@ -34,13 +41,18 @@ public class ClassBean {
     private String id;
     private String description;
     private boolean status;
-    private User userId;
+    private User user;
+    private String userId;
+
 
     /**
      * Creates a new instance of ClassBean
      *
      * @return
      */
+    public List<User> getUserList() {
+        return userFacade.findAll();
+    }
 
     public List<entity.Class> getClassList() {
         return classFacade.findAll();
@@ -58,6 +70,17 @@ public class ClassBean {
             description = eclass.getDescription();
             status = eclass.getStatus();
         }
+    }
+
+    public String createClass() {
+        user = userFacade.find(userId);
+        entity.Class eclass = new entity.Class();
+        eclass.setId(id);
+        eclass.setDescription(description);
+        eclass.setStatus(status);
+        eclass.setUserId(user);
+        classFacade.create(eclass);
+        return "class-list?faces-redirect=true";
     }
 
     public ClassBean() {
@@ -87,11 +110,19 @@ public class ClassBean {
         this.status = status;
     }
 
-    public User getUserId() {
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(User userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
