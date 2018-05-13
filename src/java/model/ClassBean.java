@@ -9,6 +9,7 @@ import entity.Class;
 import entity.Student;
 import entity.User;
 import facade.ClassFacade;
+import facade.StudentFacade;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -25,33 +26,40 @@ import javax.servlet.http.HttpServletRequest;
 public class ClassBean {
 
     @EJB
+    private StudentFacade studentFacade;
+
+    @EJB
     private ClassFacade classFacade;
-    
-    
+
     private String id;
     private String description;
     private boolean status;
-    private List<Student> studentList;
     private User userId;
+
     /**
      * Creates a new instance of ClassBean
-     * @return 
+     *
+     * @return
      */
-    
+
     public List<entity.Class> getClassList() {
         return classFacade.findAll();
     }
-    
+
+    public List<Student> getStudentList() {
+        return studentFacade.findAll();
+    }
+
     public void findClass() {
         String inputId = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getParameter("id");
         if (inputId != null) {
-            Class eclass = new Class(inputId);
+            Class eclass = classFacade.find(inputId);
             id = eclass.getId();
             description = eclass.getDescription();
             status = eclass.getStatus();
         }
     }
-    
+
     public ClassBean() {
     }
 
@@ -79,14 +87,6 @@ public class ClassBean {
         this.status = status;
     }
 
-    public List<Student> getStudentList() {
-        return studentList;
-    }
-
-    public void setStudentList(List<Student> studentList) {
-        this.studentList = studentList;
-    }
-
     public User getUserId() {
         return userId;
     }
@@ -94,6 +94,5 @@ public class ClassBean {
     public void setUserId(User userId) {
         this.userId = userId;
     }
-    
-    
+
 }
