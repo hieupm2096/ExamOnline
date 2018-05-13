@@ -61,7 +61,8 @@ public class CourseBean {
     private String name;
     private String description;
     private boolean status;
-    private User userId;
+    private String userId;
+    private User user;
 
     private List<Student> studentList;
     private List<Exam> examList;
@@ -98,8 +99,7 @@ public class CourseBean {
 //        questionFacade.create(q);
 //        return "question-list?faces-redirect=true";
 //    }
-    
-        public void findCourse() {
+    public void findCourse() {
         String inputId = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getParameter("id");
         if (inputId != null) {
             Course course = new Course(inputId);
@@ -107,14 +107,18 @@ public class CourseBean {
             name = course.getName();
             description = course.getDescription();
             status = course.getStatus();
-            userId = course.getUserId();
+            user = course.getUserId();
         }
     }
 
-    
-    public String createCourse(){
-        Course course = new Course(id);
-        
+    public String createCourse() {
+        user = userFacade.find(userId);
+        Course course = new Course();
+        course.setId(id);
+        course.setName(id);
+        course.setDescription(description);
+        course.setStatus(status);
+        course.setUserId(user);
         return "course-list?faces-redirect=true";
     }
 
@@ -143,12 +147,11 @@ public class CourseBean {
     }
 
     public User getUserId() {
-        return userId;
+        return user;
     }
 
     public void setUserId(User userId) {
-        this.userId = userId;
+        this.user = userId;
     }
-    
-    
+
 }
