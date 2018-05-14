@@ -72,6 +72,54 @@
                         </ul>
                     </div>
                 </li>
+                <li class="#{request.requestURI.contains('/course/') ? 'active' : ''}">
+                    <a data-toggle="collapse" href="#courses">
+                        <i class="material-icons">Coursees</i>
+                        <p> Course
+                            <b class="caret"></b>
+                        </p>
+                    </a>
+                    <div class="collapse #{request.requestURI.contains('/course/') ? 'in' : ''}" id="courses">
+                        <ul class="nav">
+                            <li class="#{request.requestURI == '/ExamOnline/app/course/course-list.xhtml' || request.requestURI == '/ExamOnline/app/course/course-details.xhtml' ? 'active' : ''}">
+                                <a href="http://localhost:8080/ExamOnline/app/course/course-list.xhtml">
+                                    <span class="sidebar-mini"> L </span>
+                                    <span class="sidebar-normal"> Course List </span>
+                                </a>
+                            </li>
+                            <li class="#{request.requestURI == '/ExamOnline/app/course/course-create.xhtml' ? 'active' : null}">
+                                <a href="http://localhost:8080/ExamOnline/app/course/course-create.xhtml">
+                                    <span class="sidebar-mini"> C </span>
+                                    <span class="sidebar-normal"> Create Course </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="#{request.requestURI.contains('/class/') ? 'active' : ''}">
+                    <a data-toggle="collapse" href="#classes">
+                        <i class="material-icons">Classes</i>
+                        <p> Class
+                            <b class="caret"></b>
+                        </p>
+                    </a>
+                    <div class="collapse #{request.requestURI.contains('/class/') ? 'in' : ''}" id="classes">
+                        <ul class="nav">
+                            <li class="#{request.requestURI == '/ExamOnline/app/class/class-list.xhtml' || request.requestURI == '/ExamOnline/app/class/class-details.xhtml' ? 'active' : ''}">
+                                <a href="http://localhost:8080/ExamOnline/app/class/class-list.xhtml">
+                                    <span class="sidebar-mini"> L </span>
+                                    <span class="sidebar-normal"> Class List </span>
+                                </a>
+                            </li>
+                            <li class="#{request.requestURI == '/ExamOnline/app/class/class-create.xhtml' ? 'active' : null}">
+                                <a href="http://localhost:8080/ExamOnline/app/class/class-create.xhtml">
+                                    <span class="sidebar-mini"> C </span>
+                                    <span class="sidebar-normal"> Create Class </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
             </ul>
         </div>
     </div>
