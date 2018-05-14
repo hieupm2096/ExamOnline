@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <ui:include src="../../WEB-INF/template/css-include.xhtml" />
+        <title>Student Details | Exam Online System</title>
+        <f:metadata>
+            <f:viewAction action="#{studentBean.findStudent()}" />
+        </f:metadata>
+    </h:head>
+    <h:body>
+        <div class="wrapper">
+            <ui:include src="../../WEB-INF/template/sidebar-include.xhtml" />
+            <div class="main-panel">
+                <ui:include src="../../WEB-INF/template/nav-include.xhtml" />
+                <div class="content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="card">
+                                <h:form id="q-update" class="form-horizontal">
+                                    <div class="card-header card-header-icon" data-background-color="rose">
+                                        <h4 class="card-title"><em># #{studentBean.id} </em></h4>
+                                    </div>
+                                    <div class="card-content">
+                                        <div class="row" />
+                                        <div class="row">
+                                            <label class="col-md-3 label-on-left">Name</label>
+                                            <div class="col-md-6">
+                                                <div class="form-group label-floating">
+                                                    <label class="control-label"></label>
+                                                    <h:inputTextarea value="#{studentBean.name}" class="form-control" rows="1" a:placeholder="Question..." a:required="true" a:maxlength="30" />
+                                                    <span class="help-block">30 characters</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-md-3 label-on-left">Email</label>
+                                            <div class="col-md-6">
+                                                <div class="form-group label-floating">
+                                                    <label class="control-label"></label>
+                                                    <h:inputTextarea value="#{studentBean.email}" class="form-control" rows="1" a:placeholder="Question..." a:required="true" a:maxlength="100" />
+                                                    <span class="help-block">100 characters</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-md-3 label-on-left">Password</label>
+                                            <div class="col-md-6">
+                                                <div class="form-group label-floating">
+                                                    <label class="control-label"></label>
+                                                    <h:inputSecret value="#{studentBean.password}" class="form-control" a:required="true" a:maxlength="100" />
+                                                    <span class="help-block">100 characters</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-md-3 label-on-left">Status</label>
+                                            <div class="col-md-6 checkbox-radios">
+                                                <div class="radio">
+                                                    <label>
+                                                        <input type="radio" name="#{hiddenItem.clientId}" value="true" checked="#{studentBean.status ? 'checked' : null}" /> Available
+                                                    </label>
+                                                </div>
+                                                <div class="radio">
+                                                    <label>
+                                                        <input type="radio" name="#{hiddenItem.clientId}" value="true" checked="#{!studentBean.status ? 'checked' : null}" /> N/A
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-offset-7 col-md-5">
+                                                <div class="form-group form-button">
+                                                    <h:commandButton type="submit" class="btn btn-fill btn-rose btn-lg" value="Update" />
+                                                    <h:commandButton type="reset" class="btn btn-fill btn-rose btn-lg" value="reset" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="height: 70px; display: block;" />
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ui:include src="../../WEB-INF/template/footer-include.xhtml" />
+            </div>
+        </div>
+    </h:body>
+
+    <ui:include src="../../WEB-INF/template/js-include.xhtml" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#q-update\\:datatables').DataTable({
+                paging: false,
+                responsive: true,
+                info: false,
+                searching: false,
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "Search records"
+                }
+
+            });
+
+
+            var table = $('#datatables').DataTable();
+            $('textarea').each(function () {
+                this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
+            }).on('input', function () {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+        });
+    </script>
+</html>
+

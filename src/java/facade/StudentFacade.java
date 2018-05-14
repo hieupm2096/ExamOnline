@@ -43,4 +43,30 @@ public class StudentFacade extends AbstractFacade<Student> {
         }
         return student;
     }
+
+    public Student findLast() {
+        String findLast = "SELECT s FROM Student s ORDER BY s.id DESC";
+        Student s = null;
+        try {
+            s = (Student) em.createQuery(findLast, Student.class)
+                    .setMaxResults(1)
+                    .getResultList()
+                    .get(0);
+        } catch (ArrayIndexOutOfBoundsException e) {
+
+        }
+        return s;
+    }
+
+    public String generateStudentId() {
+        Student s = findLast();
+        if (s != null) {
+            String id = s.getId();
+            if (!id.equals("S999999")) {
+                int number = Integer.parseInt(id.substring(1)) + 1;
+                return "S" + String.format("%06d", number);
+            }
+        }
+        return "S000001";
+    }
 }
