@@ -41,7 +41,7 @@ public class AnswerFacade extends AbstractFacade<Answer> {
                 return "A" + String.format("%09d", number);
             }
         } catch (ArrayIndexOutOfBoundsException e) {
-            return "A000000001";
+            return "A000000001"; 
         }
         return null;
     }
