@@ -72,6 +72,13 @@ public class QuestionFacade extends AbstractFacade<Question> {
         return q;
     }
 
+    public List<Question> findAvailableQuestionByCourse(Course course) {
+        String findQuestionByCourseId = "SELECT q FROM Question q WHERE q.courseId = :courseId AND q.status = 1";
+        return em.createQuery(findQuestionByCourseId)
+                .setParameter("courseId", course)
+                .getResultList();
+    }
+
     public List<Question> findQuestionByCourse(Course course) {
         String findQuestionByCourseId = "SELECT q FROM Question q WHERE q.courseId = :courseId";
         return em.createQuery(findQuestionByCourseId)

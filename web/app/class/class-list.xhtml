@@ -7,7 +7,7 @@
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
     <h:head>
         <ui:include src="../../WEB-INF/template/css-include.xhtml" />
-        <title>Questions | Exam Online System</title>
+        <title>Class | Exam Online System</title>
     </h:head>
     <h:body>
         <div class="wrapper">
@@ -19,52 +19,38 @@
                         <div class="row">
                             <div class="card">
                                 <div class="card-header card-header-icon" data-background-color="rose">
-                                    <i class="material-icons">question_answer</i>
+                                    <i class="material-icons">school</i>
                                 </div>
                                 <div class="card-content">
-                                    <h4 class="card-title">Questions</h4>
+                                    <h4 class="card-title">Class</h4>
                                     <div class="toolbar">
 
                                     </div>
-
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="table-responsive material-datatables">
-                                                <h:dataTable value="#{questionBean.questionList}" var="q" 
+                                                <h:dataTable value="#{classBean.classList}" var="e" 
                                                              class="table table-striped table-no-bordered table-hover" 
                                                              id="datatables" cellspacing="0" width="100%" style="width:100%"
-                                                             columnClasses=",,,,text-center">
+                                                             columnClasses=",,,,,text-center">
                                                     <h:column>
                                                         <f:facet name="header">#</f:facet>
-                                                            #{q.id}
+                                                            #{e.id}
                                                     </h:column>
                                                     <h:column>
-                                                        <f:facet name="header">Question</f:facet>
-                                                            #{q.content}
-                                                    </h:column>
-                                                    <h:column>
-                                                        <f:facet name="header">Course</f:facet>
-                                                            #{q.courseId.name}
+                                                        <f:facet name="header">Description</f:facet>
+                                                            #{e.description}
                                                     </h:column>
                                                     <h:column>
                                                         <f:facet name="header">Status</f:facet>
-                                                            #{q.status ? 'Available' : 'N/A'}
+                                                            #{e.status}
                                                     </h:column>
-                                                    <h:column headerClass="disabled-sorting text-center td-actions">
+                                                    <h:column headerClass="columnCenter disabled-sorting td-actions">
                                                         <f:facet name="header">Actions</f:facet>
-                                                        <h:form id="rq-form">
-                                                            <h:link class="btn btn-simple btn-info btn-icon edit" outcome="question-details" rel="tooltip" a:data-original-title="Question Details">
-                                                                <i class="material-icons">edit</i>
-                                                                <f:param name="id" value="#{q.id}" />
-                                                            </h:link>
-
-                                                            <h:commandLink 
-                                                                action="#{questionBean.removeQuestion(q)}" 
-                                                                class="btn btn-simple btn-danger btn-icon remove" 
-                                                                rel="tooltip" a:data-original-title="Remove Question">
-                                                                <i class="material-icons">close</i>
-                                                            </h:commandLink>
-                                                        </h:form>
+                                                        <h:link class="btn btn-simple btn-info btn-icon edit" outcome="class-details" rel="tooltip" a:data-original-title="Class Details">
+                                                            <i class="material-icons">edit</i>
+                                                            <f:param name="id" value="#{e.id}" />
+                                                        </h:link>
                                                     </h:column>
                                                 </h:dataTable>
                                             </div>
@@ -73,9 +59,9 @@
                                     <div style="height: 20px; display: block;" />
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <h:link class="btn btn-rose btn-lg" outcome="question-create">
+                                            <h:link class="btn btn-rose btn-lg" outcome="class-create">
                                                 <i class="material-icons">add_box</i>
-                                                <h:outputText value="   Create New Question" />
+                                                <h:outputText value="Create New Class" />
                                             </h:link>
                                         </div>
                                     </div>
@@ -106,8 +92,6 @@
                 }
 
             });
-
-            var table = $('#datatables').DataTable();
 
         });
     </script>

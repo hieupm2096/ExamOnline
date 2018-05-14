@@ -30,3 +30,4 @@ public class RoleFacade extends AbstractFacade<Role> {
     }
     
 }
+

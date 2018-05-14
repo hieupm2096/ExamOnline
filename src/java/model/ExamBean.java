@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package model;
 
 import entity.Class;
 import entity.Course;
@@ -12,6 +12,7 @@ import entity.ExamStudent;
 import entity.ExamStudentPK;
 import entity.Question;
 import entity.Student;
+import entity.User;
 import facade.ClassFacade;
 import facade.CourseFacade;
 import facade.ExamFacade;
@@ -22,14 +23,15 @@ import facade.UserFacade;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
-import java.util.Random;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +46,9 @@ public class ExamBean implements Serializable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExamBean.class);
     private static final String EXAM_LIST_REDIRECT = "exam-list?faces-redirect=true";
+    private static final String EXAM_DETAIL_PAGE_REDIRECT = "exam-details?faces-redirect=true";
+
+    private final int EXTEND_DURATION = 15;
 
     @EJB
     private ExamStudentFacade examStudentFacade;
@@ -77,11 +82,14 @@ public class ExamBean implements Serializable {
         return courseFacade.findByStatus(true);
     }
 
+    private String id;
     private String description;
     private int numOfQuestion;
     private int duration;
+
     private List<Student> students;
     private List<Question> questions;
+    private List<ExamStudent> examStudents;
 
     private String studentId;
     private Student foundStudent;
@@ -95,6 +103,10 @@ public class ExamBean implements Serializable {
     private String courseId;
 
     private List<entity.Class> classList;
+
+    private User user;
+    private Date startTime;
+    private Exam exam;
 
     @PostConstruct
     public void init() {
@@ -181,11 +193,10 @@ public class ExamBean implements Serializable {
             if (course != null) {
 
                 // get question of course id
-                List<Question> courseQuestions = questionFacade.findQuestionByCourse(course);
+                List<Question> courseQuestions = questionFacade.findAvailableQuestionByCourse(course);
 
                 // shuffle course question
-                long seed = System.nanoTime();
-                Collections.shuffle(courseQuestions, new Random(seed));
+                Collections.shuffle(courseQuestions);
 
                 // add course question to question list
                 if (courseQuestions != null && !courseQuestions.isEmpty()) {
@@ -208,7 +219,7 @@ public class ExamBean implements Serializable {
     }
 
     public void findClass() {
-        String id = classId;
+        id = classId;
         entity.Class temp = classFacade.find(id);
         if (temp != null && temp.getStatus()) {
             foundClass = new entity.Class();
@@ -227,7 +238,7 @@ public class ExamBean implements Serializable {
     }
 
     public void findStudent() {
-        String id = studentId;
+        id = studentId;
         Student temp = studentFacade.find(id);
         if (temp != null && temp.getStatus()) {
             foundStudent = temp;
@@ -235,7 +246,7 @@ public class ExamBean implements Serializable {
     }
 
     public void findQuestion() {
-        String id = questionId;
+        id = questionId;
         Question temp = questionFacade.find(id);
         if (temp != null && temp.getStatus()) {
             if (temp.getCourseId().getId().equals(courseId)) {
@@ -249,18 +260,19 @@ public class ExamBean implements Serializable {
     }
 
     public String createExam() {
-        String id = examFacade.generateExamId();
+        id = examFacade.generateExamId();
 
         // get user id of current login user
         String userId = authenticationBean.getLoginUser().getId();
-        
-        Exam exam = new Exam();
+
+        exam = new Exam();
         exam.setId(id);
         exam.setDescription(description);
         exam.setUserId(userFacade.find(userId));
         exam.setNumOfQuestion(numOfQuestion);
         exam.setCourseId(courseFacade.find(courseId));
         exam.setDuration(duration);
+        exam.setQuestionList(questions);
         examFacade.create(exam);
         createExamStudent(exam);
         return EXAM_LIST_REDIRECT;
@@ -297,7 +309,59 @@ public class ExamBean implements Serializable {
     }
 
     public java.util.Date compareTime(int duration) {
-        return new java.util.Date(new java.util.Date().getTime() - (duration * 60000));
+        return new java.util.Date(new java.util.Date().getTime() - ((duration + 15) * 60000));
+    }
+
+    public void findExam() {
+        String inputId = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getParameter("id");
+        if (inputId != null) {
+            exam = examFacade.findExamById(inputId);
+            id = exam.getId();
+            description = exam.getDescription();
+            courseId = exam.getCourseId().getId();
+
+            duration = exam.getDuration();
+
+            questions = exam.getQuestionList();
+            numOfQuestion = questions.size();
+
+            examStudents = exam.getExamStudentList();
+
+            user = exam.getUserId();
+            startTime = exam.getStartTime();
+
+        }
+    }
+
+    public boolean isExamStarted() {
+        return exam.getStartTime() != null;
+    }
+
+    public boolean isExamOngoing() {
+        startTime = exam.getStartTime();
+        if (startTime != null) {
+            Date endTime = new Date(startTime.getTime() + ((duration + EXTEND_DURATION) * 60000));
+            return new Date().before(endTime);
+        }
+        return false;
+    }
+
+    public void startExam() {
+        startTime = new Date();
+        exam.setStartTime(startTime);
+        examFacade.edit(exam);
+    }
+
+    public int getEXTEND_DURATION() {
+        return EXTEND_DURATION;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getDescription() {
@@ -394,6 +458,45 @@ public class ExamBean implements Serializable {
 
     public void setFoundQuestion(Question foundQuestion) {
         this.foundQuestion = foundQuestion;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public List<ExamStudent> getExamStudents() {
+        return examStudents;
+    }
+
+    public void setExamStudents(List<ExamStudent> examStudents) {
+        this.examStudents = examStudents;
+    }
+
+    public Exam getExam() {
+        return exam;
+    }
+
+    public void setExam(Exam exam) {
+        this.exam = exam;
+    }
+
+    public long getTimeoutDuration() {
+        Date endTime = new Date(startTime.getTime() + ((duration + EXTEND_DURATION) * 60000));
+        long temp = (endTime.getTime() - new Date().getTime()) / 1000;
+        LOGGER.info("remaining time: " + temp);
+        return temp;
     }
 
 }

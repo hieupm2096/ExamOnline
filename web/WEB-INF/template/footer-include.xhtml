@@ -12,12 +12,12 @@
                         </a>
                     </li>
                     <li>
-                        <a href="http://localhost:8080/ExamOnline/app/question/question-list.xhtml" style="#{request.requestURI == '/ExamOnline/app/question/question-list.xhtml' ? 'color: #ec407a;' : null}">
+                        <a href="http://localhost:8080/ExamOnline/app/question/question-list.xhtml" style="#{request.requestURI.contains('/ExamOnline/app/question/') ? 'color: #ec407a;' : null}">
                             Questions
                         </a>
                     </li>
                     <li>
-                        <a href="http://localhost:8080/ExamOnline/app/exam/exam-list.xhtml" style="#{request.requestURI == '/ExamOnline/app/exam/exam-list.xhtml' ? 'color: #ec407a;' : null}">
+                        <a href="http://localhost:8080/ExamOnline/app/exam/exam-list.xhtml" style="#{request.requestURI.contains('/ExamOnline/app/exam/') ? 'color: #ec407a;' : null}">
                             Exams
                         </a>
                     </li>

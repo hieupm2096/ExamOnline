@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package model;
 
 import entity.Answer;
 import entity.Course;
@@ -93,12 +93,11 @@ public class QuestionBean implements Serializable {
         String currentAnswerId = answerFacade.generateAnswerId();
         
         long number = Integer.parseInt(currentAnswerId.substring(1));
-        int i = 0;
-        
-        for (String[] answer : answers) {
-            if (answer != null && !answer[0].isEmpty()) {
-                a.add(createAnswer("A" + String.format("%09d", number + i),answer[0], Boolean.parseBoolean(answer[1]), q));
-                i++;
+
+        for (int j = 0; j < 5; j++) {
+            if (answers[j] != null && !answers[j][0].isEmpty()) {
+                String answerId = "A" + String.format("%09d", number + j);
+                a.add(createAnswer(answerId, answers[j][0], Boolean.parseBoolean(answers[j][1]), q));
             }
         }
         

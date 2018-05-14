@@ -1,12 +1,256 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
     <h:head>
-        <title>Facelet Title</title>
+        <ui:include src="../../WEB-INF/template/css-include.xhtml" />
+        <title>Exam Details | Exam Online System</title>
+        <f:metadata>
+            <f:viewAction action="#{examBean.findExam()}" />
+        </f:metadata>
     </h:head>
     <h:body>
-        Hello from Facelets
+        <div class="wrapper">
+            <ui:include src="../../WEB-INF/template/sidebar-include.xhtml" />
+            <div class="main-panel">
+                <ui:include src="../../WEB-INF/template/nav-include.xhtml" />
+                <div class="content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="card">
+                                <h:form id="examDetailForm" class="form-horizontal">
+                                    <div class="card-header card-header-icon" data-background-color="rose">
+                                        <h4 class="card-title"><em># #{examBean.id} </em></h4>
+                                    </div>
+                                    <div class="card-content">
+                                        <div class="row" />
+                                        <div class="row">
+                                            <label class="col-md-3 label-on-left">Description</label>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label"></label>
+                                                    <h:inputTextarea value="#{examBean.description}"
+                                                                     class="form-control" rows="1"
+                                                                     readonly="true"
+                                                                     a:required="true" a:maxlength="200" />
+                                                    <span class="help-block">200 characters</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-md-3 label-on-left">Course</label>
+                                            <div class="col-md-3">
+                                                <h:selectOneMenu value="#{examBean.courseId}" class="selectpicker" disabled="true"
+                                                                 a:data-style="btn btn-primary btn-round" a:title="Choose course" a:required="true">
+                                                    <f:selectItem itemLabel="Choose course" itemDisabled="true" />
+                                                    <f:selectItems value="#{examBean.courseList}" var="c" itemValue="#{c.id}" itemLabel="#{c.name}" />
+                                                </h:selectOneMenu>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-md-3 label-on-left">Duration (min)</label>
+                                            <div class="col-md-2">
+                                                <h:inputText value="#{examBean.duration} + (#{examBean.EXTEND_DURATION})"
+                                                             class="form-control" />
+                                            </div>
+
+                                            <label class="col-md-2 label-on-left">Number of question</label>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <h:inputText value="#{examBean.numOfQuestion}" 
+                                                                 class="form-control"
+                                                                 a:required="true" a:type="number" a:min="5" a:max="1000" />
+                                                    <span class="help-block">At least 5 questions, maximum 1000 questions</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-md-3 label-on-left">Creator</label>
+                                            <div class="col-md-2">
+                                                <h:inputText value="#{examBean.user.name}" 
+                                                             class="form-control"
+                                                             readonly="true"/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-md-3 label-on-left">Status</label>
+                                            <div class="col-md-2">
+                                                <c:choose>
+                                                    <c:when test="#{!examBean.examStarted}">
+                                                        <input type="text" class="text-warning form-control" value="Pending" readonly="true"></input>
+                                                    </c:when>
+                                                    <c:when test="#{examBean.examStarted and examBean.examOngoing}">
+                                                        <input type="text" class="text-success form-control" value="On Going" readonly="true"></input>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <input type="text" class="text-muted form-control" value="N/A" readonly="true"></input>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </div>
+                                        </div>
+                                        <h:panelGroup id="timerPanelGroup" class="row">
+                                            <h:panelGroup id="startTimePanelGroup" rendered="#{examBean.examStarted}">
+                                                <label class="col-md-3 label-on-left">Start Time</label>
+                                                <div class="col-md-2">
+                                                    <h:inputText 
+                                                        value="#{examBean.examStarted ? examBean.startTime : 'N/A'}" 
+                                                        class="form-control"
+                                                        readonly="true"
+                                                        rendered="#{examBean.examStarted}"
+                                                        a:type="datetime-local"/>
+                                                </div>
+                                            </h:panelGroup>
+                                            <h:panelGroup id="elapsedTimePanelGroup" rendered="#{examBean.examOngoing}">
+                                                <label class="col-md-2 label-on-left">Remaining Time</label>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <pe:timer
+                                                            id="txtHiddenRemainingTime"
+                                                            timeout="#{examBean.timeoutDuration}"
+                                                            singleRun="true"
+                                                            format="HH:mm:ss"
+                                                            visible="false"
+                                                            rendered="#{examBean.examStarted}"
+                                                            />
+                                                        <input id="txtRemainingTime" type="text" class="form-control" />
+                                                    </div>
+                                                </div>
+                                            </h:panelGroup>
+
+                                        </h:panelGroup>
+                                        <h:panelGroup id="startExamPanelGroup" class="row" rendered="#{!examBean.examStarted}">
+                                            <div class="col-md-offset-3 col-md-6 text-right">
+                                                <h:commandLink
+                                                    action="#{examBean.startExam()}"
+                                                    id="startExamButton"
+                                                    class="btn btn-info btn-round"
+                                                    rendered="#{!examBean.examStarted}">
+                                                    <i class="material-icons">panorama_fish_eye</i> Start Exam
+                                                    <f:ajax render="examDetailForm:timerPanelGroup examDetailForm:startTimePanelGroup
+                                                            examDetailForm:elapsedTimePanelGroup examDetailForm:txtHiddenRemainingTime
+                                                            examDetailForm:startExamPanelGroup examDetailForm:startExamButton" />
+                                                </h:commandLink>
+                                            </div>
+                                        </h:panelGroup>
+
+                                        <div class="row">
+                                            <div class="col-md-offset-1 col-md-10">
+                                                <div class="card">
+                                                    <div class="card-header card-header-text" data-background-color="green">
+                                                        <h4 class="card-title">Students</h4>
+                                                    </div>
+                                                    <div class="card-content table-responsive">
+                                                        <h:dataTable value="#{examBean.examStudents}" var="es"
+                                                                     class="table table-striped table-hover" 
+                                                                     id="studentDatatable" cellspacing="0" width="100%" style="width:100%">
+                                                            <h:column>
+                                                                <f:facet name="header">#</f:facet>
+                                                                    #{es.student.id}
+                                                            </h:column>
+                                                            <h:column>
+                                                                <f:facet name="header">Name</f:facet>
+                                                                    #{es.student.name}
+                                                            </h:column>
+                                                            <h:column>
+                                                                <f:facet name="header">Email</f:facet>
+                                                                    #{es.student.email}
+                                                            </h:column>
+                                                            <h:column>
+                                                                <f:facet name="header">Passcode</f:facet>
+                                                                    #{es.passcode}
+                                                            </h:column>
+                                                        </h:dataTable>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="display: block; height: 50px;" />
+
+                                        <div class="row">
+                                            <div class="col-md-offset-1 col-md-10">
+                                                <div class="card">
+                                                    <div class="card-header card-header-text" data-background-color="orange">
+                                                        <h4 class="card-title">Questions</h4>
+                                                    </div>
+                                                    <div class="card-content table-responsive">
+                                                        <h:dataTable value="#{examBean.questions}" var="q" 
+                                                                     class="table table-striped table-no-bordered table-hover" 
+                                                                     id="questionDatatable" cellspacing="0" width="100%" style="width:100%"
+                                                                     columnClasses=",,text-center">
+                                                            <h:column>
+                                                                <f:facet name="header">#</f:facet>
+                                                                    #{q.id}
+                                                            </h:column>
+                                                            <h:column>
+                                                                <f:facet name="header">Question</f:facet>
+                                                                    #{q.content}
+                                                            </h:column>
+                                                            <h:column headerClass="disabled-sorting text-center td-actions">
+                                                                <f:facet name="header">Actions</f:facet>
+                                                                <h:link class="btn btn-simple btn-info btn-icon edit" 
+                                                                        outcome="/app/question/question-details" 
+                                                                        rel="tooltip" a:data-original-title="Question Details">
+                                                                    <i class="material-icons">description</i>
+                                                                    <f:param name="id" value="#{q.id}" />
+                                                                </h:link>
+                                                            </h:column>
+                                                        </h:dataTable>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="display: block; height: 30px;" />
+                                    </div>
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ui:include src="../../WEB-INF/template/footer-include.xhtml" />
+            </div>
+        </div>
+
     </h:body>
+    <ui:include src="../../WEB-INF/template/js-include.xhtml" />
+    <script>
+        $(document).ready(function () {
+            $('#examDetailForm\\:questionDatatable').DataTable({
+                "pagingType": "full_numbers",
+                "lengthMenu": [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, "All"]
+                ],
+                responsive: true,
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "Search records"
+                }
+
+            });
+
+            $('#examDetailForm\\:studentDatatable').DataTable({
+                "pagingType": "full_numbers",
+                "lengthMenu": [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, "All"]
+                ],
+                responsive: true,
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "Search records"
+                }
+
+            });
+            $('#examDetailForm\\:txtHiddenRemainingTime').on('DOMSubtreeModified', function () {
+                $('#txtRemainingTime').val($('#examDetailForm\\:txtHiddenRemainingTime').text());
+            });
+        });
+    </script>
 </html>
 
