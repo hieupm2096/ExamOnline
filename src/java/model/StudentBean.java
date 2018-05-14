@@ -42,7 +42,7 @@ public class StudentBean implements Serializable {
 
     public String removeStudent(Student s) {
         studentFacade.remove(s);
-        return "student?facet-redirect=true";
+        return "student-list?facet-redirect=true";
     }
 
     public void setStudentFacade(StudentFacade studentFacade) {
