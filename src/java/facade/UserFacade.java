@@ -50,4 +50,58 @@ public class UserFacade extends AbstractFacade<User> {
         // else  email or/and password is empty
         return user;
     }
+    
+    public String generateUserId() {
+        User u = findLast();
+        if (u != null) {
+            String id = u.getId();
+            if (!id.equals("U999999")) {
+                int number = Integer.parseInt(id.substring(1)) + 1;
+                return "U" + String.format("%06d", number);
+            }
+        }
+        return "U000001";
+    }
+    
+    public User findLast() {
+        String findLast = "SELECT u FROM User u ORDER BY u.id DESC";
+        User u = null;
+        try {
+            u = (User) em.createQuery(findLast, User.class)
+                    .setMaxResults(1)
+                    .getResultList()
+                    .get(0);
+        } catch (ArrayIndexOutOfBoundsException e) {
+
+        }
+        return u;
+    }
+    
+    public User checkEmail(String email){
+        String findByEmail ="SELECT u from User u WHERE u.email = :email";
+        User u = null;
+        try {
+            u = (User) em.createQuery(findByEmail)
+                .setParameter("email", email)
+                .getSingleResult();
+        } catch (NoResultException e) {
+            LOGGER.error(e.getMessage());
+        }
+        
+        return u;
+    }
+    
+    public User checkEmail(String email, String id){
+        String findByEmailAndId ="SELECT u from User u WHERE u.email = :email AND u.id != :id";
+        User u = null;
+        try {
+            u = (User) em.createQuery(findByEmailAndId)
+                .setParameter("email", email)
+                .setParameter("id", id)
+                .getSingleResult();
+        } catch (NoResultException e) {
+            LOGGER.error(e.getMessage());
+        }
+        return u;
+    }
 }
