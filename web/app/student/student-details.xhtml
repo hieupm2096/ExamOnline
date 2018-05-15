@@ -64,6 +64,16 @@ and open the template in the editor.
                                             </div>
                                         </div>
                                         <div class="row">
+                                            <label class="col-md-3 label-on-left">Confirm Password</label>
+                                            <div class="col-md-6">
+                                                <div class="form-group label-floating">
+                                                    <label class="control-label"></label>
+                                                    <h:inputSecret value="#{studentBean.password}" class="form-control" a:required="true" a:maxlength="100" />
+                                                    <span class="help-block">100 characters</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
                                             <label class="col-md-3 label-on-left">Status</label>
                                             <div class="col-md-6 checkbox-radios">
                                                 <div class="radio">
@@ -77,6 +87,7 @@ and open the template in the editor.
                                                     </label>
                                                 </div>
                                             </div>
+                                            <h:inputHidden id="selectedItem" binding="#{hiddenItem}" value="#{studentBean.status}" rendered="#{facesContext.currentPhaseId.ordinal ne 6}" />
                                         </div>
                                         <div class="row">
                                             <div class="col-md-offset-7 col-md-5">

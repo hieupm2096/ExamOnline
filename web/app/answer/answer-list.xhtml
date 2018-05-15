@@ -38,7 +38,7 @@ and open the template in the editor.
                                                 <h:dataTable value="#{answerBean.answerList}" var="a" 
                                                              class="table table-striped table-no-bordered table-hover" 
                                                              id="datatables" cellspacing="0" width="100%" style="width:100%"
-                                                             columnClasses=",,,text-center">
+                                                             columnClasses=",,,text-center,text-center">
                                                     <h:column>
                                                         <f:facet name="header">#</f:facet>
                                                             #{a.id}
@@ -51,9 +51,9 @@ and open the template in the editor.
                                                         <f:facet name="header">Email</f:facet>
                                                             #{a.questionId.id}
                                                     </h:column>
-                                                    <h:column>
-                                                        <f:facet name="header">Status</f:facet>
-                                                            #{a.isCorrect ? 'Correct' : 'InCorrect'}
+                                                    <h:column headerClass="text-right">
+                                                        <f:facet name="header">Is Correct</f:facet>
+                                                        <i class="material-icons #{a.isCorrect ? 'text-success' : 'text-danger'}">#{a.isCorrect ? 'done' : 'clear'}</i>
                                                     </h:column>
                                                     <h:column headerClass="disabled-sorting text-center td-actions">
                                                         <f:facet name="header">Actions</f:facet>
@@ -62,13 +62,6 @@ and open the template in the editor.
                                                                 <i class="material-icons">edit</i>
                                                                 <f:param name="id" value="#{a.id}" />
                                                             </h:link>
-
-                                                            <h:commandLink 
-                                                                action="#{answerBean.removeStudent(a)}" 
-                                                                class="btn btn-simple btn-danger btn-icon remove" 
-                                                                rel="tooltip" a:data-original-title="Remove Student">
-                                                                <i class="material-icons">close</i>
-                                                            </h:commandLink>
                                                         </h:form>
                                                     </h:column>
                                                 </h:dataTable>

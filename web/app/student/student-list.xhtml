@@ -39,7 +39,7 @@ and open the template in the editor.
                                                 <h:dataTable value="#{studentBean.studentList}" var="s" 
                                                              class="table table-striped table-no-bordered table-hover" 
                                                              id="datatables" cellspacing="0" width="100%" style="width:100%"
-                                                             columnClasses=",,,text-center">
+                                                             columnClasses=",,,text-center,text-center">
                                                     <h:column>
                                                         <f:facet name="header">#</f:facet>
                                                             #{s.id}
@@ -52,7 +52,7 @@ and open the template in the editor.
                                                         <f:facet name="header">Email</f:facet>
                                                             #{s.email}
                                                     </h:column>
-                                                    <h:column>
+                                                    <h:column headerClass="text-center">
                                                         <f:facet name="header">Status</f:facet>
                                                             #{s.status ? 'Available' : 'N/A'}
                                                     </h:column>
