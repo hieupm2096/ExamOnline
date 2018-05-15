@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
@@ -47,6 +46,7 @@ public class ExamBean implements Serializable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExamBean.class);
     private static final String EXAM_LIST_REDIRECT = "exam-list?faces-redirect=true";
+    private static final String EXAM_DETAIL_PAGE_REDIRECT = "exam-details?faces-redirect=true";
 
     private final int EXTEND_DURATION = 15;
 
@@ -86,8 +86,10 @@ public class ExamBean implements Serializable {
     private String description;
     private int numOfQuestion;
     private int duration;
+
     private List<Student> students;
     private List<Question> questions;
+    private List<ExamStudent> examStudents;
 
     private String studentId;
     private Student foundStudent;
@@ -191,11 +193,10 @@ public class ExamBean implements Serializable {
             if (course != null) {
 
                 // get question of course id
-                List<Question> courseQuestions = questionFacade.findQuestionByCourse(course);
+                List<Question> courseQuestions = questionFacade.findAvailableQuestionByCourse(course);
 
                 // shuffle course question
-                long seed = System.nanoTime();
-                Collections.shuffle(courseQuestions, new Random(seed));
+                Collections.shuffle(courseQuestions);
 
                 // add course question to question list
                 if (courseQuestions != null && !courseQuestions.isEmpty()) {
@@ -271,6 +272,7 @@ public class ExamBean implements Serializable {
         exam.setNumOfQuestion(numOfQuestion);
         exam.setCourseId(courseFacade.find(courseId));
         exam.setDuration(duration);
+        exam.setQuestionList(questions);
         examFacade.create(exam);
         createExamStudent(exam);
         return EXAM_LIST_REDIRECT;
@@ -313,7 +315,7 @@ public class ExamBean implements Serializable {
     public void findExam() {
         String inputId = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getParameter("id");
         if (inputId != null) {
-            exam = examFacade.find(inputId);
+            exam = examFacade.findExamById(inputId);
             id = exam.getId();
             description = exam.getDescription();
             courseId = exam.getCourseId().getId();
@@ -323,11 +325,7 @@ public class ExamBean implements Serializable {
             questions = exam.getQuestionList();
             numOfQuestion = questions.size();
 
-            students = new ArrayList<>();
-
-            for (ExamStudent examStudent : exam.getExamStudentList()) {
-                students.add(examStudent.getStudent());
-            }
+            examStudents = exam.getExamStudentList();
 
             user = exam.getUserId();
             startTime = exam.getStartTime();
@@ -341,12 +339,17 @@ public class ExamBean implements Serializable {
 
     public boolean isExamOngoing() {
         startTime = exam.getStartTime();
-        Date endTime = new Date(startTime.getTime() + ((duration + EXTEND_DURATION) * 60000));
-        return isExamStarted() && new Date().before(endTime);
+        if (startTime != null) {
+            Date endTime = new Date(startTime.getTime() + ((duration + EXTEND_DURATION) * 60000));
+            return new Date().before(endTime);
+        }
+        return false;
     }
-    
+
     public void startExam() {
-        exam.setStartTime(new Date());
+        startTime = new Date();
+        exam.setStartTime(startTime);
+        examFacade.edit(exam);
     }
 
     public int getEXTEND_DURATION() {
@@ -471,6 +474,29 @@ public class ExamBean implements Serializable {
 
     public void setStartTime(Date startTime) {
         this.startTime = startTime;
+    }
+
+    public List<ExamStudent> getExamStudents() {
+        return examStudents;
+    }
+
+    public void setExamStudents(List<ExamStudent> examStudents) {
+        this.examStudents = examStudents;
+    }
+
+    public Exam getExam() {
+        return exam;
+    }
+
+    public void setExam(Exam exam) {
+        this.exam = exam;
+    }
+
+    public long getTimeoutDuration() {
+        Date endTime = new Date(startTime.getTime() + ((duration + EXTEND_DURATION) * 60000));
+        long temp = (endTime.getTime() - new Date().getTime()) / 1000;
+        LOGGER.info("remaining time: " + temp);
+        return temp;
     }
 
 }

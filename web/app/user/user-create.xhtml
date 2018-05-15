@@ -1,0 +1,149 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <h:head>
+        <ui:include src="../../WEB-INF/template/css-include.xhtml" />
+        <title>Create Question | Exam Online System</title>
+        <f:metadata>
+            <f:viewAction action="#{userBean.prepareCreate()}" />
+        </f:metadata>
+
+
+    </h:head>
+    <h:body>
+        <div class="wrapper">
+            <ui:include src="../../WEB-INF/template/sidebar-include.xhtml" />
+            <div class="main-panel">
+                <ui:include src="../../WEB-INF/template/nav-include.xhtml" />
+                <div class="content">
+                    <div class="container-fluid">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header card-header-icon" data-background-color="rose">
+                                    <i class="material-icons">account_box</i>
+                                </div>
+                                <div class="card-content">
+                                    <h4 class="card-title">Create New User</h4>
+                                    <h:form id="Register">
+                                        <div class="form-group label-floating">
+                                            <label class="control-label">Full Name *</label>
+                                            <h:inputText a:type = "text" class="form-control" value="#{userBean.name}" id="name"/>
+
+                                        </div>
+
+                                        <div class="form-group label-floating">
+                                            <label class="control-label">Email address *</label>
+                                            <h:inputText a:type="email" value="#{userBean.email}" id="userEmail" class="form-control"> 
+                                                <f:validator binding="#{userValidation}"/>
+                                                <f:ajax event="blur" render="emailMessage" />
+                                            </h:inputText>
+                                            <h:message style = "color:red;margin:8px;" id="emailMessage" for="userEmail"/> 
+
+                                        </div>
+
+                                        <div class="form-group label-floating">
+                                            <h:selectOneListbox class="selectpicker" a:data-style="btn select-with-transition" title="Select Role" value="#{userBean.roleId}"
+                                                     id="role" a:data-msg="Please select a role!" >
+                                                <f:selectItem itemDisabled="true" itemValue="" itemLabel="Select Role"></f:selectItem>
+                                                <f:selectItems value="#{userBean.listRoles()}" var="r" itemValue="#{r.id}" itemLabel="#{r.name}" />
+                                            </h:selectOneListbox>
+
+                                        </div>
+
+                                        <div class="form-group label-floating">
+                                            <label class="control-label">
+                                                Password
+                                                <small>*</small>
+                                            </label>
+                                            <input type="password" class="form-control" id="password"
+                                                   jsf:value="#{userBean.password}" minlength="6"
+                                                   style="cursor: auto;" required="true" aria-required="true"/>
+
+                                        </div>
+
+                                        <div class="form-group label-floating">
+                                            <label class="control-label">
+                                                Confirm Password
+                                                <small>*</small>
+                                            </label>
+                                            <input type="password" class="form-control" id="passwordConfirmation"
+                                                   style="cursor: auto;" equalTo="#password" required="true" aria-required="true"/>
+                                        </div>
+
+                                        <div class="col-md-7">
+                                            <div class="checkbox form-horizontal-checkbox">
+                                                <label>
+                                                    <h:selectBooleanCheckbox  value="#{userBean.status}">
+
+                                                        Available?
+                                                    </h:selectBooleanCheckbox>
+                                                </label>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <h:commandButton type="submit" action="#{userBean.createUser()}" value="Submit" class="btn btn-fill btn-rose" >
+                                            
+                                            </h:commandButton>    
+                                        </div>
+
+                                        <h:commandButton class="btn" type="reset" value="Reset"><div class="ripple-container"></div></h:commandButton>
+                                    </h:form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ui:include src="../../WEB-INF/template/footer-include.xhtml" />
+            </div>
+        </div>
+    </h:body>
+
+    <ui:include src="../../WEB-INF/template/js-include.xhtml" />
+
+    <script>
+
+
+        $(document).ready(function () {
+            $("#Register").validate({
+                highlight: function (element) {
+                    $(element).closest('.form-group').removeClass('has-success').addClass('has-danger');
+                },
+                success: function (element) {
+                    $(element).closest('.form-group').removeClass('has-danger').addClass('has-success');
+                    $(element).closest('.form-group').removeClass('has-error');
+                    $(element).closest('label').remove();
+                },
+                errorPlacement: function (error, element) {
+                    $(element).closest('.form-group').append(error);
+                    $(element).closest('.form-group').removeClass('has-success');
+                    $(element).closest('.form-group').addClass('has-error');
+                }, 
+                rules:{
+                    "Register:name": {
+                        required: true
+                    },
+                    "Register:userEmail":{
+                        required: true
+                    },
+                    "Register:role":{
+                        required: true
+                    }
+                    
+                }
+            });
+        });
+
+
+
+    </script>
+
+</html>
+

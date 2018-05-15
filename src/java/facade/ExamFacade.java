@@ -50,4 +50,10 @@ public class ExamFacade extends AbstractFacade<Exam> {
         }
         return "E000001";
     }
+    
+    public Exam findExamById(String examId) {
+        String findExamById = "SELECT e FROM Exam e WHERE e.id = :id";
+        em.getEntityManagerFactory().getCache().evictAll();
+        return (Exam) em.createQuery(findExamById).setParameter("id", examId).getSingleResult();
+    }
 }
