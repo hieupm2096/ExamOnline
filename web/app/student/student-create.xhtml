@@ -29,7 +29,7 @@
                                         <div class="wizard-navigation">
                                             <ul>
                                                 <li>
-                                                    <a href="#student" data-toggle="tab">Student</a>
+                                                    <a href="#studentForm" data-toggle="tab">Student</a>
                                                 </li>
                                                 <li>
                                                     <a href="#finish" data-toggle="tab">Finish</a>
@@ -37,7 +37,7 @@
                                             </ul>
                                         </div>
                                         <div class="tab-content">
-                                            <div class="tab-pane" id="student">
+                                            <div class="tab-pane" id="studentForm">
                                                 <div class="row">
                                                     <h4 class="info-text"> Let's start</h4>
                                                     <div class="row">
@@ -66,7 +66,7 @@
                                                         <div class="col-sm-offset-2 col-sm-8">
                                                             <div class="form-group label-floating is-empty">
                                                                 <label class="control-label">Password...</label>
-                                                                <h:inputTextarea value="#{studentBean.password}"
+                                                                <h:inputTextarea value="#{studentBean.newPassword}"
                                                                                  class="form-control" rows="1"
                                                                                  a:required="true" a:maxlength="100" />
                                                                 <span class="help-block">100 characters</span>

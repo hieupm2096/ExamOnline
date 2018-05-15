@@ -25,12 +25,15 @@ public class StudentBean implements Serializable {
 
     @EJB
     private StudentFacade studentFacade;
+    
+    private static final String STUDENT_LIST_PAGE_REDIRECT = "student-list?faces-redirect=true";
 
     private List<Student> studentList;
     private String id;
     private String name;
     private String email;
-    private String password;
+    private String newPassword;
+    private String confirmPassword;
     private boolean status;
 
     public StudentBean() {
@@ -42,7 +45,7 @@ public class StudentBean implements Serializable {
 
     public String removeStudent(Student s) {
         studentFacade.remove(s);
-        return "student-list?facet-redirect=true";
+        return "student-list?faces-redirect=true";
     }
 
     public void setStudentFacade(StudentFacade studentFacade) {
@@ -73,12 +76,20 @@ public class StudentBean implements Serializable {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getNewPassword() {
+        return newPassword;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
 
     public boolean isStatus() {
@@ -94,11 +105,24 @@ public class StudentBean implements Serializable {
         s.setId(studentFacade.generateStudentId());
         s.setName(name);
         s.setEmail(email);
-        s.setPassword(password);
+        s.setPassword(newPassword);
         s.setStatus(true);
         studentFacade.create(s);
 
-        return "student?faces-redirect=true";
+        return STUDENT_LIST_PAGE_REDIRECT;
+    }
+
+    public String updateStudent() {
+        Student s = new Student();
+        s.setId(id);
+        s.setName(name);
+        s.setEmail(email);
+        if (newPassword != null && newPassword.equals(confirmPassword)) {
+            s.setPassword(newPassword);
+        }
+        s.setStatus(status);
+        studentFacade.edit(s);
+        return STUDENT_LIST_PAGE_REDIRECT;
     }
 
     public void findStudent() {
@@ -108,7 +132,6 @@ public class StudentBean implements Serializable {
             id = student.getId();
             name = student.getName();;
             email = student.getEmail();
-            password = student.getPassword();
             status = student.getStatus();
         }
     }
