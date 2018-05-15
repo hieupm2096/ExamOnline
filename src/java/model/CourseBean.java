@@ -24,6 +24,7 @@ import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -63,13 +64,15 @@ public class CourseBean {
     private String name;
     private String description;
     private boolean status;
-    private String userId;
     private User user;
 
     private List<Student> studentList;
     private List<Exam> examList;
     private List<Question> questionList;
 
+    @Inject
+    private AuthenticationBean authenticationBean;
+    
     @PostConstruct
     public void init() {
         examList = new ArrayList<>();
@@ -83,31 +86,6 @@ public class CourseBean {
     public CourseBean() {
     }
 
-//     public String createQuestion() {
-//        Question q = new Question();
-//        q.setId(questionFacade.generateQuestionId());
-//        q.setContent(content);
-//        q.setStatus(true);
-//        q.setQuestionTypeId(questionTypeFacade.find(questionTypeId));
-//        q.setCourseId(courseFacade.find(courseId));
-//        
-//        List<Answer> a = new ArrayList<>();
-//        String currentAnswerId = answerFacade.generateAnswerId();
-//        
-//        long number = Integer.parseInt(currentAnswerId.substring(1));
-//        int i = 0;
-//        
-//        for (String[] answer : answers) {
-//            if (answer != null && !answer[0].isEmpty()) {
-//                a.add(createAnswer("A" + String.format("%09d", number + i),answer[0], Boolean.parseBoolean(answer[1]), q));
-//                i++;
-//            }
-//        }
-//        
-//        q.setAnswerList(a);
-//        questionFacade.create(q);
-//        return "question-list?faces-redirect=true";
-//    }
     public List<User> getUserList() {
         return userFacade.findAll();
     }
@@ -133,12 +111,13 @@ public class CourseBean {
     }
 
     public String createCourse() {
+        String userId = authenticationBean.getLoginUser().getId();
         user = userFacade.find(userId);
         Course course = new Course();
-        course.setId(id);
+        course.setId(courseFacade.generateCourseId());
         course.setName(name);
         course.setDescription(description);
-        course.setStatus(status);
+        course.setStatus(true);
         course.setUserId(user);
         courseFacade.create(course);
         return "course-list?faces-redirect=true";
@@ -174,14 +153,6 @@ public class CourseBean {
 
     public void setStatus(boolean status) {
         this.status = status;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public User getUser() {
