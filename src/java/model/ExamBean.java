@@ -495,7 +495,6 @@ public class ExamBean implements Serializable {
     public long getTimeoutDuration() {
         Date endTime = new Date(startTime.getTime() + ((duration + EXTEND_DURATION) * 60000));
         long temp = (endTime.getTime() - new Date().getTime()) / 1000;
-        LOGGER.info("remaining time: " + temp);
         return temp;
     }
 
