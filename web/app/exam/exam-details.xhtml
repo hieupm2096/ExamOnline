@@ -65,7 +65,8 @@
                                                 <div class="form-group">
                                                     <h:inputText value="#{examBean.numOfQuestion}" 
                                                                  class="form-control"
-                                                                 a:required="true" a:type="number" a:min="5" a:max="1000" />
+                                                                 a:required="true" a:type="number" a:min="5" a:max="1000"
+                                                                 readonly="true"/>
                                                     <span class="help-block">At least 5 questions, maximum 1000 questions</span>
                                                 </div>
                                             </div>
@@ -118,7 +119,7 @@
                                                             visible="false"
                                                             rendered="#{examBean.examStarted}"
                                                             />
-                                                        <input id="txtRemainingTime" type="text" class="form-control" />
+                                                        <input id="txtRemainingTime" type="text" class="form-control" readonly="true" />
                                                     </div>
                                                 </div>
                                             </h:panelGroup>
