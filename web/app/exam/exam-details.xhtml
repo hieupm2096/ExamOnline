@@ -122,7 +122,6 @@
                                                     </div>
                                                 </div>
                                             </h:panelGroup>
-
                                         </h:panelGroup>
                                         <h:panelGroup id="startExamPanelGroup" class="row" rendered="#{!examBean.examStarted}">
                                             <div class="col-md-offset-3 col-md-6 text-right">
@@ -164,6 +163,10 @@
                                                             <h:column>
                                                                 <f:facet name="header">Passcode</f:facet>
                                                                     #{es.passcode}
+                                                            </h:column>
+                                                            <h:column>
+                                                                <f:facet name="header">Result</f:facet>
+                                                                    #{es.result != null ? es.result : 'N/A'}
                                                             </h:column>
                                                         </h:dataTable>
                                                     </div>
