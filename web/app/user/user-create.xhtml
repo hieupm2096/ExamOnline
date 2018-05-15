@@ -9,9 +9,6 @@
     <h:head>
         <ui:include src="../../WEB-INF/template/css-include.xhtml" />
         <title>Create Question | Exam Online System</title>
-        <f:metadata>
-            <f:viewAction action="#{userBean.prepareCreate()}" />
-        </f:metadata>
 
 
     </h:head>
@@ -75,23 +72,9 @@
                                                    style="cursor: auto;" equalTo="#password" required="true" aria-required="true"/>
                                         </div>
 
-                                        <div class="col-md-7">
-                                            <div class="checkbox form-horizontal-checkbox">
-                                                <label>
-                                                    <h:selectBooleanCheckbox  value="#{userBean.status}">
-
-                                                        Available?
-                                                    </h:selectBooleanCheckbox>
-                                                </label>
-                                            </div>
-
-                                        </div>
-
-                                        <div class="col-md-3">
-                                            <h:commandButton type="submit" action="#{userBean.createUser()}" value="Submit" class="btn btn-fill btn-rose" >
-                                            
-                                            </h:commandButton>    
-                                        </div>
+                                        
+                                            <h:commandButton type="submit" action="#{userBean.createUser()}" value="Submit" class="btn btn-fill btn-rose" /> 
+                                        
 
                                         <h:commandButton class="btn" type="reset" value="Reset"><div class="ripple-container"></div></h:commandButton>
                                     </h:form>
