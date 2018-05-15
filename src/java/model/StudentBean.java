@@ -113,11 +113,10 @@ public class StudentBean implements Serializable {
     }
 
     public String updateStudent() {
-        Student s = new Student();
-        s.setId(id);
+        Student s = studentFacade.find(id);
         s.setName(name);
         s.setEmail(email);
-        if (newPassword != null && newPassword.equals(confirmPassword)) {
+        if (newPassword != null && !newPassword.isEmpty() && newPassword.equals(confirmPassword)) {
             s.setPassword(newPassword);
         }
         s.setStatus(status);

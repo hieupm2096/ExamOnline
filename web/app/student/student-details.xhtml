@@ -30,6 +30,7 @@ and open the template in the editor.
                                 <h:form id="q-update" class="form-horizontal">
                                     <div class="card-header card-header-icon" data-background-color="rose">
                                         <h4 class="card-title"><em># #{studentBean.id} </em></h4>
+                                        <h:inputHidden value="#{studentBean.id}" />
                                     </div>
                                     <div class="card-content">
                                         <div class="row" />
@@ -90,7 +91,7 @@ and open the template in the editor.
                                         <div class="row">
                                             <div class="col-md-offset-7 col-md-5">
                                                 <div class="form-group form-button">
-                                                    <h:commandButton type="submit" class="btn btn-fill btn-rose btn-lg" value="Update" />
+                                                    <h:commandButton type="submit" action="#{studentBean.updateStudent()}" class="btn btn-fill btn-rose btn-lg" value="Update" />
                                                     <h:commandButton type="reset" class="btn btn-fill btn-rose btn-lg" value="reset" />
                                                 </div>
                                             </div>
