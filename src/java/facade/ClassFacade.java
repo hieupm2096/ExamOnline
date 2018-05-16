@@ -42,8 +42,11 @@ public class ClassFacade extends AbstractFacade<Class> {
         }
         return cse;
     }
+    
+    public void update(entity.Class cl){
+        em.merge(cl);
+    }
 
-    // TO DO EqualID
     public String generateClassId() {
         entity.Class q = findLast();
         if (q != null) {

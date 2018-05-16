@@ -77,4 +77,8 @@ public class CourseFacade extends AbstractFacade<Course> {
         }
         return c;
     }
+    
+    public void update(Course cl){
+        em.merge(cl);
+    }
 }

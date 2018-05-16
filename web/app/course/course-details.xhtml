@@ -81,6 +81,14 @@
                                             </div>
                                         </div>
                                         <div style="display: block; height: 30px;" />
+                                        <div class="wizard-footer">
+                                            <div class="pull-right">
+                                                <h:commandButton action="#{courseBean.updateCourse()}" type='submit' class='btn btn-finish btn-fill btn-rose btn-wd' value='Update'>
+                                                    <f:param name="id" value="#{courseBean.id}" />
+                                                </h:commandButton>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div>
                                     </div>
                                 </h:form>
                             </div>

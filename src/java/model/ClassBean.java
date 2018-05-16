@@ -74,6 +74,14 @@ public class ClassBean {
         }
     }
 
+    public String updateClass() {
+        String inputId = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getParameter("id");
+        entity.Class eclass = classFacade.find(inputId);
+        eclass.setDescription(description);
+        classFacade.update(eclass);
+        return "class-list?faces-redirect=true";
+    }
+
     public String createClass() {
         String userId = authenticationBean.getLoginUser().getId();
         user = userFacade.find(userId);

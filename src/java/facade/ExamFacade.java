@@ -56,4 +56,5 @@ public class ExamFacade extends AbstractFacade<Exam> {
         em.getEntityManagerFactory().getCache().evictAll();
         return (Exam) em.createQuery(findExamById).setParameter("id", examId).getSingleResult();
     }
+    
 }
