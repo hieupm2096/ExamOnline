@@ -104,4 +104,18 @@ public class UserFacade extends AbstractFacade<User> {
         }
         return u;
     }
+
+    public int countInstructors() {
+        String countInstructors = "SELECT u from User u WHERE u.roleId.id = :id";
+        int count = 0;
+        try {
+            count = em.createQuery(countInstructors)
+                    .setParameter("id", "R02")
+                    .getResultList().size();
+        } catch (Exception e) {
+        }
+        return count;
+    }
+    
+    
 }
