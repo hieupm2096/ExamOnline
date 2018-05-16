@@ -15,6 +15,7 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
@@ -35,12 +36,13 @@ public class ClassBean {
     @EJB
     private ClassFacade classFacade;
 
+    @Inject
+    private AuthenticationBean authenticationBean;
+
     private String id;
     private String description;
     private boolean status;
     private User user;
-    private String userId;
-
 
     /**
      * Creates a new instance of ClassBean
@@ -69,12 +71,21 @@ public class ClassBean {
         }
     }
 
+    public String updateClass() {
+        String inputId = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getParameter("id");
+        entity.Class eclass = classFacade.find(inputId);
+        eclass.setDescription(description);
+        classFacade.update(eclass);
+        return "class-list?faces-redirect=true";
+    }
+
     public String createClass() {
+        String userId = authenticationBean.getLoginUser().getId();
         user = userFacade.find(userId);
         entity.Class eclass = new entity.Class();
-        eclass.setId(id);
+        eclass.setId(classFacade.generateClassId());
         eclass.setDescription(description);
-        eclass.setStatus(status);
+        eclass.setStatus(true);
         eclass.setUserId(user);
         classFacade.create(eclass);
         return "class-list?faces-redirect=true";
@@ -117,14 +128,6 @@ public class ClassBean {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
 }

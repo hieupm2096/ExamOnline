@@ -28,4 +28,34 @@ public class ClassFacade extends AbstractFacade<Class> {
     public ClassFacade() {
         super(Class.class);
     }
+  
+    public entity.Class findLast() {
+        String findLast = "SELECT q FROM Class q ORDER BY q.id DESC";
+        entity.Class cse = null;
+        try {
+            cse = (entity.Class) em.createQuery(findLast, entity.Class.class)
+                    .setMaxResults(1)
+                    .getResultList()
+                    .get(0);
+        } catch (ArrayIndexOutOfBoundsException e) {
+
+        }
+        return cse;
+    }
+    
+    public void update(entity.Class cl){
+        em.merge(cl);
+    }
+
+    public String generateClassId() {
+        entity.Class q = findLast();
+        if (q != null) {
+            String id = q.getId();
+            if (!id.equals("CL99999")) {
+                int number = Integer.parseInt(id.substring(2)) + 1;
+                return "CL" + String.format("%05d", number);
+            }
+        }
+        return "CL00001";
+    }
 }

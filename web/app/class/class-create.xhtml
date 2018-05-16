@@ -39,44 +39,18 @@
                                         <div class="tab-content">
                                             <div class="tab-pane" id="class">
                                                 <div class="row">
-                                                    <h4 class="info-text">Let's start with the course</h4>
+                                                    <h4 class="info-text">Let's start with the class</h4>
                                                     <div class="row">
                                                         <div class="col-xs-offset-1 col-xs-10 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
-                                                            <div class="form-group label-floating is-empty">
-                                                                <label class="control-label">ID... </label>
-                                                                <h:inputTextarea value="#{classBean.id}"
-                                                                                 class="form-control" rows="1"
-                                                                                 a:required="true" a:maxlength="200" />
-                                                                <span class="help-block">100 characters</span>
-                                                            </div>
                                                             <div style="display: block; height: 50px;" />
                                                             <div class="form-group label-floating is-empty">
                                                                 <label class="control-label">Description... </label>
                                                                 <h:inputTextarea value="#{classBean.description}"
-                                                                                 class="form-control" rows="1"
+                                                                                 class="form-control" rows="2"
                                                                                  a:required="true" a:maxlength="200" />
                                                                 <span class="help-block">100 characters</span>
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                    <div style="display: block; height: 50px;" />
-                                                    <div class="row">
-                                                        <div class="col-xs-offset-1 col-xs-10 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
-                                                            <label class="control-label">User</label>
-                                                            <h:selectOneMenu id="courseId" value="#{classBean.userId}" class="selectpicker" 
-                                                                             a:data-style="btn btn-primary btn-round" a:title="Choose UserId" a:required="true">
-                                                                <f:selectItem itemLabel="Choose User" itemDisabled="true" />
-                                                                <f:selectItems value="#{classBean.userList}" var="c" itemValue="#{c.id}" itemLabel="#{c.name}" />
-                                                            </h:selectOneMenu>
-                                                        </div>
-                                                        <div style="display: block; height: 50px;" />                                                     
-                                                        <div class="col-xs-offset-1 col-xs-10 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
-                                                            <label class="control-label">Status</label>
-                                                            <h:selectOneMenu id="status" value="#{courseBean.status}" class="selectpicker" 
-                                                                             a:data-style="btn btn-primary btn-round" a:title="Choose status" a:required="true">
-                                                                <f:selectItem  itemValue="#{true}" itemLabel="true"/>
-                                                                <f:selectItem  itemValue="#{false}" itemLabel="false"/>
-                                                            </h:selectOneMenu>
+                                                            <div style="display: block; height: 50px;" />
                                                         </div>
                                                     </div>
                                                 </div>
