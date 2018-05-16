@@ -31,6 +31,33 @@ public class CourseFacade extends AbstractFacade<Course> {
         super(Course.class);
     }
 
+    public Course findLast() {
+        String findLast = "SELECT q FROM Course q ORDER BY q.id DESC";
+        Course cse = null;
+        try {
+            cse = (Course) em.createQuery(findLast, Course.class)
+                    .setMaxResults(1)
+                    .getResultList()
+                    .get(0);
+        } catch (ArrayIndexOutOfBoundsException e) {
+
+        }
+        return cse;
+    }
+
+    // TO DO EqualID CSE9999
+    public String generateCourseId() {
+        Course q = findLast();
+        if (q != null) {
+            String id = q.getId();
+            if (!id.equals("CSE9999")) {
+                int number = Integer.parseInt(id.substring(3)) + 1;
+                return "CSE" + String.format("%04d", number);
+            }
+        }
+        return "CSE0000";
+    }
+    
     public List<Course> findByStatus(boolean status) {
         String query = "SELECT c FROM Course c WHERE c.status = :status";
         return em.createQuery(query)
@@ -49,5 +76,9 @@ public class CourseFacade extends AbstractFacade<Course> {
 
         }
         return c;
+    }
+    
+    public void update(Course cl){
+        em.merge(cl);
     }
 }

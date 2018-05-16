@@ -23,6 +23,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
@@ -33,43 +34,45 @@ import javax.servlet.http.HttpServletRequest;
 @Named(value = "courseBean")
 @RequestScoped
 public class CourseBean {
-
+    
     @EJB
     private UserFacade userFacade;
-
+    
     @EJB
     private StudentFacade studentFacade;
-
+    
     @EJB
     private QuestionFacade questionFacade;
-
+    
     @EJB
     private ExamFacade examFacade;
-
+    
     @EJB
     private CourseFacade courseFacade;
-
+    
     @EJB
     private ClassFacade classFacade;
-
+    
     @EJB
     private AnswerFacade answerFacade;
-
+    
     public List<Course> getCourseList() {
         return courseFacade.findAll();
     }
-
+    
     private String id;
     private String name;
     private String description;
     private boolean status;
-    private String userId;
     private User user;
-
+    
     private List<Student> studentList;
     private List<Exam> examList;
     private List<Question> questionList;
-
+    
+    @Inject
+    private AuthenticationBean authenticationBean;
+    
     @PostConstruct
     public void init() {
         examList = new ArrayList<>();
@@ -82,44 +85,19 @@ public class CourseBean {
      */
     public CourseBean() {
     }
-
-//     public String createQuestion() {
-//        Question q = new Question();
-//        q.setId(questionFacade.generateQuestionId());
-//        q.setContent(content);
-//        q.setStatus(true);
-//        q.setQuestionTypeId(questionTypeFacade.find(questionTypeId));
-//        q.setCourseId(courseFacade.find(courseId));
-//        
-//        List<Answer> a = new ArrayList<>();
-//        String currentAnswerId = answerFacade.generateAnswerId();
-//        
-//        long number = Integer.parseInt(currentAnswerId.substring(1));
-//        int i = 0;
-//        
-//        for (String[] answer : answers) {
-//            if (answer != null && !answer[0].isEmpty()) {
-//                a.add(createAnswer("A" + String.format("%09d", number + i),answer[0], Boolean.parseBoolean(answer[1]), q));
-//                i++;
-//            }
-//        }
-//        
-//        q.setAnswerList(a);
-//        questionFacade.create(q);
-//        return "question-list?faces-redirect=true";
-//    }
+    
     public List<User> getUserList() {
         return userFacade.findAll();
     }
-
+    
     public List<Question> getQuestionList() {
         return questionFacade.findAll();
     }
-
+    
     public List<Exam> getExamList() {
         return examFacade.findAll();
     }
-
+    
     public void findCourse() {
         String inputId = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getParameter("id");
         if (inputId != null) {
@@ -131,14 +109,15 @@ public class CourseBean {
             user = course.getUserId();
         }
     }
-
+    
     public String createCourse() {
+        String userId = authenticationBean.getLoginUser().getId();
         user = userFacade.find(userId);
         Course course = new Course();
-        course.setId(id);
+        course.setId(courseFacade.generateCourseId());
         course.setName(name);
         course.setDescription(description);
-        course.setStatus(status);
+        course.setStatus(true);
         course.setUserId(user);
         courseFacade.create(course);
         return "course-list?faces-redirect=true";
@@ -151,49 +130,48 @@ public class CourseBean {
     public String getId() {
         return id;
     }
-
+    
     public void setId(String id) {
         this.id = id;
     }
-
+    
     public String getName() {
         return name;
     }
-
+    
     public void setName(String name) {
         this.name = name;
     }
-
+    
     public String getDescription() {
         return description;
     }
-
+    
     public void setDescription(String description) {
         this.description = description;
     }
-
+    
     public boolean isStatus() {
         return status;
     }
-
+    
     public void setStatus(boolean status) {
         this.status = status;
     }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
+    
     public User getUser() {
         return user;
     }
-
+    
     public void setUser(User user) {
         this.user = user;
     }
-
+    
+    public String updateCourse() {
+        String inputId = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getParameter("id");
+        Course course = courseFacade.find(inputId);
+        course.setDescription(description);
+        courseFacade.update(course);
+        return "course-list?faces-redirect=true";
+    }
 }
