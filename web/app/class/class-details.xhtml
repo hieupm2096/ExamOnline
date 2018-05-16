@@ -22,7 +22,7 @@
                     <div class="container-fluid">
                         <div class="row">
                             <div class="card">
-                                <h:form id="e-detail" class="form-horizontal">
+                                <h:form id="classDetailForm" class="form-horizontal">
                                     <div class="card-header card-header-icon" data-background-color="rose">
                                         <h4 class="card-title"><em># #{classBean.id} </em></h4>
                                     </div>
@@ -43,11 +43,209 @@
                                             <div class="col-md-9">
                                                 <label class="col-md-3 label-on-left">Status</label>
                                                 <div class="form-group col-md-6">
-                                                    <h:button class="btn btn-primary btn-round" value="#{classBean.status}"/>
+                                                    <h:button class="btn btn-primary btn-round" value="#{classBean.status}" />
                                                 </div>
                                             </div>
                                         </div>
                                         <div style="display: block; height: 30px;" />
+                                        <div class="row">
+                                            <div class="col-md-offset-1 col-md-10">
+                                                <div class="card">
+                                                    <div class="card-header card-header-text" data-background-color="green">
+                                                        <h4 class="card-title">Students</h4>
+                                                    </div>
+                                                    <h:panelGroup id="studentDatatablePanelGroup">
+                                                        <div class="card-content table-responsive">
+                                                            <h:dataTable value="#{classBean.students}" var="s"
+                                                                         class="table table-striped table-hover" 
+                                                                         id="studentDatatable" cellspacing="0" width="100%" style="width:100%">
+                                                                <h:column>
+                                                                    <f:facet name="header">#</f:facet>
+                                                                        #{s.id}
+                                                                </h:column>
+                                                                <h:column>
+                                                                    <f:facet name="header">Name</f:facet>
+                                                                        #{s.name}
+                                                                </h:column>
+                                                                <h:column>
+                                                                    <f:facet name="header">Email</f:facet>
+                                                                        #{s.email}
+                                                                </h:column>
+                                                                <h:column>
+                                                                    <f:facet name="header">Actions</f:facet>
+                                                                </h:column>
+                                                            </h:dataTable>
+                                                            <a class="btn btn-success" href="#" data-toggle="modal" data-target="#studentModal">Add Student</a>
+                                                        </div>
+                                                    </h:panelGroup>
+                                                </div>
+                                            </div>
+
+                                            <!--studentModal-->
+                                            <div class="modal fade" id="studentModal" tabindex="-1" role="dialog">
+                                                <div class="modal-dialog modal-lg" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="card card-plain">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <i class="material-icons">close</i>
+                                                                </button>
+                                                                <h2 class="modal-title card-title text-center">Student</h2>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="col-md-offset-1 col-md-10">
+                                                                    <div class="row">
+                                                                        <div class="form-group is-empty col-md-12">
+                                                                            <div class="input-group">
+                                                                                <h:inputText id="studentId" 
+                                                                                             value="#{classBean.studentId}" 
+                                                                                             class="form-control" 
+                                                                                             a:minlength="7" a:maxlength="7" a:placeholder="Student ID" />
+                                                                                <span class="help-block">7 characters</span>
+                                                                                <span class="input-group-btn">
+                                                                                    <h:commandLink action="#{classBean.findStudent()}" class="btn btn-white btn-raised btn-fab btn-fab-mini">
+                                                                                        <f:ajax execute="classDetailForm:studentId" 
+                                                                                                render="classDetailForm:studentInfoPanelGroup classDetailForm:studentInfoForm classDetailForm:addStudentToListPanelGroup classDetailForm:addStudentToListBtn"/>
+                                                                                        <i class="material-icons">search</i>
+                                                                                    </h:commandLink>
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <h:panelGroup id="studentInfoPanelGroup">
+                                                                        <h:panelGroup id="studentInfoForm" rendered="#{classBean.foundStudent != null}">
+                                                                            <div class="row">
+                                                                                <div class="form-group col-md-12">
+                                                                                    <label class="control-label">Name</label>
+                                                                                    <h:inputText value="#{classBean.foundStudent.name}" class="form-control" readonly="true" a:maxlength="30" a:required="true"/>
+                                                                                    <span class="help-block">30 characters</span>
+                                                                                </div>
+                                                                                <div class="form-group col-md-12">
+                                                                                    <label class="control-label">Email</label>
+                                                                                    <h:inputText value="#{classBean.foundStudent.email}" class="form-control" readonly="true" a:type="email"/>
+                                                                                </div>
+                                                                            </div>
+                                                                        </h:panelGroup>
+                                                                    </h:panelGroup>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <h:panelGroup id="addStudentToListPanelGroup" class="col-md-offset-1 col-md-10">
+                                                                    <h:commandButton id="addStudentToListBtn" value="Add Student" type="button" class="btn btn-simple btn-primary" rendered="#{classBean.foundStudent != null}">
+                                                                        <f:ajax listener="#{classBean.addStudentToList()}"
+                                                                                render="classDetailForm:studentDatatablePanelGroup classDetailForm:studentDatatable classDetailForm:studentInfoPanelGroup classDetailForm:studentInfoForm classDetailForm:addStudentToListPanelGroup classDetailForm:addStudentToListBtn"
+                                                                                onevent="reloadStudentDatatable"/>
+                                                                    </h:commandButton>
+                                                                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Close</button>
+                                                                </h:panelGroup>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--/studentModal-->
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-offset-1 col-md-10">
+                                                <div class="card">
+                                                    <div class="card-header card-header-text" data-background-color="blue">
+                                                        <h4 class="card-title">Courses</h4>
+                                                    </div>
+                                                    <div class="card-content table-responsive">
+                                                        <h:dataTable value="#{classBean.courses}" var="c"
+                                                                     class="table table-striped table-hover" 
+                                                                     id="courseDatatable" cellspacing="0" width="100%" style="width:100%">
+                                                            <h:column>
+                                                                <f:facet name="header">#</f:facet>
+                                                                    #{c.id}
+                                                            </h:column>
+                                                            <h:column>
+                                                                <f:facet name="header">Name</f:facet>
+                                                                    #{c.name}
+                                                            </h:column>
+                                                            <h:column>
+                                                                <f:facet name="header">Description</f:facet>
+                                                                    #{c.description}
+                                                            </h:column>
+                                                            <h:column>
+                                                                <f:facet name="header">Actions</f:facet>
+
+                                                            </h:column>
+                                                        </h:dataTable>
+                                                        <a class="btn btn-info" href="#" data-toggle="modal" data-target="#courseModal">Add Course</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!--courseModal-->
+                                            <div class="modal fade" id="courseModal" tabindex="-1" role="dialog">
+                                                <div class="modal-dialog modal-lg" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="card card-plain">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <i class="material-icons">close</i>
+                                                                </button>
+                                                                <h2 class="modal-title card-title text-center">Course</h2>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="col-md-offset-1 col-md-10">
+                                                                    <div class="row">
+                                                                        <div class="form-group is-empty col-md-12">
+                                                                            <div class="input-group">
+                                                                                <h:inputText id="courseId" 
+                                                                                             value="#{classBean.courseId}" 
+                                                                                             class="form-control" 
+                                                                                             a:minlength="7" a:maxlength="7" a:placeholder="Course ID" />
+                                                                                <span class="help-block">7 characters</span>
+                                                                                <span class="input-group-btn">
+                                                                                    <h:commandLink action="#{classBean.findCourse()}" class="btn btn-white btn-raised btn-fab btn-fab-mini">
+                                                                                        <f:ajax execute="classDetailForm:courseId" 
+                                                                                                render="classDetailForm:courseInfoPanelGroup classDetailForm:courseInfoForm classDetailForm:addCourseToListPanelGroup classDetailForm:addCourseToListBtn"/>
+                                                                                        <i class="material-icons">search</i>
+                                                                                    </h:commandLink>
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <h:panelGroup id="courseInfoPanelGroup">
+                                                                        <h:panelGroup id="courseInfoForm" rendered="#{classBean.foundCourse != null}">
+                                                                            <div class="row">
+                                                                                <div class="form-group col-md-12">
+                                                                                    <label class="control-label">Name</label>
+                                                                                    <h:inputText value="#{classBean.foundCourse.name}" class="form-control" readonly="true" a:maxlength="30" a:required="true"/>
+                                                                                    <span class="help-block">30 characters</span>
+                                                                                </div>
+                                                                                <div class="form-group col-md-12">
+                                                                                    <label class="control-label">Description</label>
+                                                                                    <h:inputTextarea value="#{classBean.foundCourse.description}" rows="2" class="form-control" readonly="true" />
+                                                                                </div>
+                                                                                <div class="form-group col-md-6">
+                                                                                    <label class="control-label">Creator</label>
+                                                                                    <h:inputText value="#{classBean.foundCourse.userId.name}" class="form-control" readonly="true" a:required="true" />
+                                                                                </div>
+                                                                            </div>
+                                                                        </h:panelGroup>
+                                                                    </h:panelGroup>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <h:panelGroup id="addCourseToListPanelGroup" class="col-md-offset-1 col-md-10">
+                                                                    <h:commandButton id="addCourseToListBtn" value="Add Course" type="button" class="btn btn-simple btn-primary" rendered="#{classBean.foundCourse != null}">
+                                                                        <f:ajax listener="#{classBean.addCourseToList()}"
+                                                                                render="classDetailForm:courseDatatablePanelGroup classDetailForm:courseDatatable classDetailForm:courseInfoPanelGroup classDetailForm:courseInfoForm classDetailForm:addCourseToListPanelGroup classDetailForm:addCourseToListBtn"
+                                                                                onevent="reloadCourseDatatable"/>
+                                                                    </h:commandButton>
+                                                                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Close</button>
+                                                                </h:panelGroup>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--/courseModal-->
+                                        </div>
+
                                         <div class="wizard-footer">
                                             <div class="pull-right">
                                                 <h:commandButton action="#{classBean.updateClass()}" type='submit' class='btn btn-finish btn-fill btn-rose btn-wd' value='Update'>
@@ -69,8 +267,31 @@
     </h:body>
     <ui:include src="../../WEB-INF/template/js-include.xhtml" />
     <script>
+        function reloadStudentDatatable(data) {
+            if (data.status === 'begin') {
+
+            }
+            if (data.status === 'complete') {
+
+            }
+            if (data.status === 'success') {
+                $('#classDetailForm\\:studentDatatable').DataTable();
+            }
+        }
+        function reloadCourseDatatable(data) {
+            if (data.status === 'begin') {
+
+            }
+            if (data.status === 'complete') {
+
+            }
+            if (data.status === 'success') {
+                $('#classDetailForm\\:courseDatatable').DataTable();
+            }
+        }
+
         $(document).ready(function () {
-            $('#e-detail\\:questionDatatable').DataTable({
+            $('#classDetailForm\\:studentDatatable').DataTable({
                 "pagingType": "full_numbers",
                 "lengthMenu": [
                     [10, 25, 50, -1],
@@ -83,8 +304,7 @@
                 }
 
             });
-
-            $('#e-detail\\:studentDatatable').DataTable({
+            $('#classDetailForm\\:courseDatatable').DataTable({
                 "pagingType": "full_numbers",
                 "lengthMenu": [
                     [10, 25, 50, -1],
@@ -95,9 +315,7 @@
                     search: "_INPUT_",
                     searchPlaceholder: "Search records"
                 }
-
             });
-
         });
     </script>
 </html>
