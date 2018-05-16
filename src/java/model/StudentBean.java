@@ -36,6 +36,7 @@ public class StudentBean implements Serializable {
     private String confirmPassword;
     private boolean status;
 
+    
     public StudentBean() {
     }
 
@@ -105,7 +106,7 @@ public class StudentBean implements Serializable {
         s.setId(studentFacade.generateStudentId());
         s.setName(name);
         s.setEmail(email);
-        s.setPassword(newPassword);
+        s.setPassword("123456");
         s.setStatus(true);
         studentFacade.create(s);
 
