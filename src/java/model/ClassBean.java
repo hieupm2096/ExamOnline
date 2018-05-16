@@ -6,19 +6,16 @@
 package model;
 
 import entity.Class;
-import entity.Course;
 import entity.Student;
 import entity.User;
 import facade.ClassFacade;
 import facade.StudentFacade;
 import facade.UserFacade;
-import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -81,6 +78,10 @@ public class ClassBean {
         eclass.setUserId(user);
         classFacade.create(eclass);
         return "class-list?faces-redirect=true";
+    }
+    
+    public int countClasses(){
+        return classFacade.count();
     }
 
     public ClassBean() {

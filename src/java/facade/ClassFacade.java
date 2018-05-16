@@ -28,5 +28,4 @@ public class ClassFacade extends AbstractFacade<Class> {
     public ClassFacade() {
         super(Class.class);
     }
-    
 }

@@ -10,9 +10,9 @@ import facade.StudentFacade;
 import java.io.Serializable;
 import java.util.List;
 import javax.ejb.EJB;
-import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -135,5 +135,9 @@ public class StudentBean implements Serializable {
             email = student.getEmail();
             status = student.getStatus();
         }
+    }
+    
+    public int countStudents(){
+        return studentFacade.count();
     }
 }

@@ -185,6 +185,10 @@ public class UserBean implements Serializable {
             status = selectedUser.getStatus();
         }
     }
+    
+    public int countInstructors(){
+        return userFacade.countInstructors();
+    }
 
     /**
      * Creates a new instance of UserBean

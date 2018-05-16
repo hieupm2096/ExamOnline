@@ -181,4 +181,7 @@ public class QuestionBean implements Serializable {
         this.answerList = answerList;
     }
 
+    public int countQuestions(){
+        return questionFacade.count();
+    }
 }
