@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 @Named(value = "classBean")
 @RequestScoped
 public class ClassBean {
-
+    
     @EJB
     private UserFacade userFacade;
 
