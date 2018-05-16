@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package model;
 
 import entity.Role;
 import entity.User;
@@ -11,10 +11,10 @@ import facade.RoleFacade;
 import facade.UserFacade;
 import java.io.Serializable;
 import java.util.List;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 import org.slf4j.LoggerFactory;
@@ -25,17 +25,21 @@ import org.slf4j.LoggerFactory;
  */
 @Named("userBean")
 @RequestScoped
-public class UserBean implements Serializable{
+public class UserBean implements Serializable {
+
     @EJB
-    private UserFacade userFacade = new UserFacade();
-    
+    private UserFacade userFacade;
+
     @EJB
     private RoleFacade roleFacade;
 
-     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(UserBean.class);
-     private static final Logger LOG = Logger.getLogger(UserBean.class.getName());
-
+    @Inject
+    private AuthenticationBean authenticationBean;
     
+    
+     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(UserBean.class);
+     
+
     private User user;
     private String roleId;
     private String name;
@@ -44,14 +48,14 @@ public class UserBean implements Serializable{
     private boolean status;
     private String id;
 
-    public List<Role> listRoles(){
+    public List<Role> listRoles() {
         return roleFacade.findAll();
     }
-    
-    public List<User> findAll(){
+
+    public List<User> findAll() {
         return this.userFacade.findAll();
     }
-    
+
     public User getUser() {
         return user;
     }
@@ -107,17 +111,14 @@ public class UserBean implements Serializable{
     public void setId(String id) {
         this.id = id;
     }
-    
-    
-    
 
     public String removeUser(User user) {
-        
+
         userFacade.remove(user);
         return "user-list?faces-redirect=true";
     }
-    
-    public Role getRoleFromId(String id){
+
+    public Role getRoleFromId(String id) {
         return roleFacade.find(id);
     }
     
@@ -129,44 +130,40 @@ public class UserBean implements Serializable{
             user.setStatus(status);
             user.setRoleId(getRoleFromId(roleId));
     }
-    
-    public void prepareCreate(){
-        HttpSession session = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-        session.setAttribute("createOrUpdate", "create");
-        }
-    
-    public String createUser(){
+
+
+    public String createUser() {
         try {
             prepUser();
+            
             user.setId(userFacade.generateUserId());
+            user.setStatus(true);
 
-        userFacade.create(user);
+            userFacade.create(user);
 
-        LOGGER.info("Created: " + user.getId() + ": " + user.getName());
-        
-        
+            LOGGER.info("Created: " + user.getId() + ": " + user.getName());
+
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            
+
+        } finally {
+            user = new User();
+            return "user-list?faces-redirect=true";
         }
-        
-        finally {
-        user = new User();
-        return "user-list?faces-redirect=true";
-        }
-        
+
     }
-    
-    public String prepareUserDetails(User u){
-        HttpSession session = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+
+    public String prepareUserDetails(User u) {
+        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
         session.setAttribute("selectedUserId", u.getId());
         session.setAttribute("createOrUpdate", "update");
         return "user-details?faces-redirect=true";
     }
     
-    public String updateUser(){
+
+    public String updateUser() {
         prepUser();
-        user.setId(id);    
+        user.setId(id);
         try {
             this.userFacade.edit(user);
         } catch (Exception e) {
@@ -174,10 +171,9 @@ public class UserBean implements Serializable{
         }
         return "user-list?faces-redirect=true";
     }
-    
-    
-    public void getSelectedUser(){
-        HttpSession session = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+
+    public void getSelectedUser() {
+        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
         String selected = session.getAttribute("selectedUserId").toString();
         if (selected != null) {
             User selectedUser = userFacade.find(selected);
@@ -190,8 +186,9 @@ public class UserBean implements Serializable{
         }
     }
     
-    
-    
+    public int countInstructors(){
+        return userFacade.countInstructors();
+    }
 
     /**
      * Creates a new instance of UserBean
@@ -199,6 +196,4 @@ public class UserBean implements Serializable{
     public UserBean() {
     }
 
-  
-    }
-
+}

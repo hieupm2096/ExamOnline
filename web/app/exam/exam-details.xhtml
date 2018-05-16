@@ -65,7 +65,8 @@
                                                 <div class="form-group">
                                                     <h:inputText value="#{examBean.numOfQuestion}" 
                                                                  class="form-control"
-                                                                 a:required="true" a:type="number" a:min="5" a:max="1000" />
+                                                                 a:required="true" a:type="number" a:min="5" a:max="1000"
+                                                                 readonly="true"/>
                                                     <span class="help-block">At least 5 questions, maximum 1000 questions</span>
                                                 </div>
                                             </div>
@@ -118,11 +119,10 @@
                                                             visible="false"
                                                             rendered="#{examBean.examStarted}"
                                                             />
-                                                        <input id="txtRemainingTime" type="text" class="form-control" />
+                                                        <input id="txtRemainingTime" type="text" class="form-control" readonly="true" />
                                                     </div>
                                                 </div>
                                             </h:panelGroup>
-
                                         </h:panelGroup>
                                         <h:panelGroup id="startExamPanelGroup" class="row" rendered="#{!examBean.examStarted}">
                                             <div class="col-md-offset-3 col-md-6 text-right">
@@ -164,6 +164,10 @@
                                                             <h:column>
                                                                 <f:facet name="header">Passcode</f:facet>
                                                                     #{es.passcode}
+                                                            </h:column>
+                                                            <h:column>
+                                                                <f:facet name="header">Result</f:facet>
+                                                                    #{es.result != null ? es.result : 'N/A'}
                                                             </h:column>
                                                         </h:dataTable>
                                                     </div>

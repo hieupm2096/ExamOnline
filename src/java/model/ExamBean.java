@@ -28,9 +28,9 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
-import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
@@ -495,8 +495,11 @@ public class ExamBean implements Serializable {
     public long getTimeoutDuration() {
         Date endTime = new Date(startTime.getTime() + ((duration + EXTEND_DURATION) * 60000));
         long temp = (endTime.getTime() - new Date().getTime()) / 1000;
-        LOGGER.info("remaining time: " + temp);
         return temp;
+    }
+    
+    public int countExams(){
+        return examFacade.count();
     }
 
 }

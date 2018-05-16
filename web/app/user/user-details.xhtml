@@ -11,7 +11,6 @@
         <title>Question Details | Exam Online System</title>
         <f:metadata>
             <f:viewAction action="#{userBean.getSelectedUser()}" />
-            
         </f:metadata>
         
     </h:head>
@@ -66,7 +65,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group label-floating">
                                                     <label class="control-label"></label>
-                                                    <h:inputText value="#{userBean.password}" class="form-control" a:rows="1" a:placeholder="Password..." a:required="true" a:maxlength="100" />
+                                                    <h:inputSecret value="#{userBean.password}" class="form-control" a:rows="1" a:placeholder="Password..." a:required="true" a:maxlength="100" redisplay="true"/>
                                                     <span class="help-block">100 characters</span>
                                                 </div>
                                             </div>

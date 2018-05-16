@@ -21,10 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -123,6 +123,10 @@ public class CourseBean {
         return "course-list?faces-redirect=true";
     }
     
+    public int countCourses(){
+        return courseFacade.count();
+    }
+
     public String getId() {
         return id;
     }

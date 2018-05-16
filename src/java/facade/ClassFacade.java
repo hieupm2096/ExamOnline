@@ -28,7 +28,7 @@ public class ClassFacade extends AbstractFacade<Class> {
     public ClassFacade() {
         super(Class.class);
     }
-    
+  
     public entity.Class findLast() {
         String findLast = "SELECT q FROM Class q ORDER BY q.id DESC";
         entity.Class cse = null;

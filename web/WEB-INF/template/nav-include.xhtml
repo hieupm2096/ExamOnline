@@ -2,7 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition  xmlns="http://www.w3.org/1999/xhtml"
                  xmlns:h="http://java.sun.com/jsf/html"
-                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                 xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <nav class="navbar navbar-transparent navbar-absolute">
         <div class="container-fluid">
             <div class="navbar-minimize">
@@ -18,32 +20,27 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                
+
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
-                        <a href="#pablo" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="material-icons">face</i>Profile
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="material-icons">face</i> #{authenticationBean.loginUser.name}
                         </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="#">Mike John responded to your email</a>
-                            </li>
-                            <li>
-                                <a href="#">You have 5 new tasks</a>
-                            </li>
-                            <li>
-                                <a href="#">You're now friend with Andrew</a>
-                            </li>
-                            <li>
-                                <a href="#">Another Notification</a>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a href="#">Another One</a>
-                            </li>
-                        </ul>
+                        <h:form>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="/ExamOnline/app/user/user-details.xhtml">My Profile
+                                        <c:set var="selectedUserId" value="${authenticationBean.loginUser.id}" scope="session" />
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <h:commandLink action="#{authenticationBean.logout()}" value="Logout" />
+                                </li>
+                            </ul>
+                        </h:form>
                     </li>
                     <li class="separator hidden-lg hidden-md"></li>
                 </ul>

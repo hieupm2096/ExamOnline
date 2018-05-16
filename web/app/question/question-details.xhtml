@@ -43,7 +43,7 @@
                                             <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label class="control-label"></label>
-                                                    <h:selectOneMenu class="selectpicker" a:data-style="btn btn-primary btn-round" value="#{questionBean.questionTypeId}">
+                                                    <h:selectOneMenu class="selectpicker" a:data-style="btn btn-primary btn-round" value="#{questionBean.questionTypeId}" disabled="true">
                                                         <f:selectItem itemValue="" itemLabel="Choose type" itemDisabled="true" />
                                                         <f:selectItems value="#{questionBean.questionTypeList}" var="t" itemValue="#{t.id}" itemLabel="#{t.title}" />
                                                     </h:selectOneMenu>
@@ -105,13 +105,13 @@
                                                                 </h:column>
                                                                 <h:column headerClass="disabled-sorting text-center td-actions">
                                                                     <f:facet name="header">Actions</f:facet>
-                                                                    <h:link class="btn btn-simple btn-info btn-icon edit" outcome="answer-details" rel="tooltip" a:data-original-title="Edit Answer">
+                                                                    <h:link class="btn btn-simple btn-info btn-icon edit" outcome="/app/answer/answer-details" rel="tooltip" a:data-original-title="Edit Answer">
                                                                         <i class="material-icons">edit</i>
                                                                         <f:param name="id" value="#{a.id}" />
                                                                     </h:link>
 
                                                                     <c:if test="#{questionBean.answerList.size() > 2}">
-                                                                        <h:link class="btn btn-simple btn-danger btn-icon remove" outcome="answer-details" rel="tooltip" a:data-original-title="Remove Answer">
+                                                                        <h:link class="btn btn-simple btn-danger btn-icon remove" outcome="question-list" rel="tooltip" a:data-original-title="Remove Answer">
                                                                             <i class="material-icons">close</i>
                                                                             <f:param name="id" value="#{a.id}" />
                                                                         </h:link>

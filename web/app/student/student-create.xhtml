@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+    <h:head>
+        <ui:include src="../../WEB-INF/template/css-include.xhtml" />
+        <title>Create Student | Exam Online System</title>
+    </h:head>
+    <h:body>
+        <div class="wrapper">
+            <ui:include src="../../WEB-INF/template/sidebar-include.xhtml" />
+            <div class="main-panel">
+                <ui:include src="../../WEB-INF/template/nav-include.xhtml" />
+                <div class="content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="card">
+                                <h:form class="form-horizontal">
+                                    <div class="card-content">
+                                        <div class="row">
+                                            <h3 class="text-center">
+                                                Create New Student
+                                            </h3>
+                                            <h5 class="text-center">Fill in the form to create new student </h5>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-md-3 label-on-left">Name</label>
+                                            <div class="col-md-6">
+                                                <div class="form-group label-floating">
+                                                    <label class="control-label"></label>
+                                                    <h:inputText value="#{studentBean.name}" class="form-control" a:placeholder="Name..." a:required="true" a:maxlength="30" />
+                                                    <span class="help-block">30 characters</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-md-3 label-on-left">Email</label>
+                                            <div class="col-md-6">
+                                                <div class="form-group label-floating">
+                                                    <label class="control-label"></label>
+                                                    <h:inputText value="#{studentBean.email}" class="form-control" a:type="email" a:placeholder="Email..." a:required="true" a:maxlength="100" />
+                                                    <span class="help-block">100 characters</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-md-3 label-on-left">Default Password</label>
+                                            <div class="col-md-6">
+                                                <div class="form-group label-floating">
+                                                    <label class="control-label"></label>
+                                                    <h:inputText value="123456" class="form-control" a:readonly="true" a:placeholder="Email..." a:required="true" a:maxlength="100" />
+                                                    <span class="help-block">100 characters</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-offset-7 col-md-5">
+                                                <div class="form-group form-button">
+                                                    <h:commandButton action="#{studentBean.createStudent()}" type='submit' class='btn btn-finish btn-fill btn-rose btn-wd' value='Submit' />
+                                                    <h:commandButton type="reset" class="btn btn-finish btn-fill btn-rose btn-wd" value="reset" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="height: 70px; display: block;" />
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ui:include src="../../WEB-INF/template/footer-include.xhtml" />
+            </div>
+        </div>
+    </h:body>
+
+    <ui:include src="../../WEB-INF/template/js-include.xhtml" />
+    <script>
+        
+    </script>
+</html>

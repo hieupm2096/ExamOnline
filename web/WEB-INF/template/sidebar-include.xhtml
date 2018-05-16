@@ -1,7 +1,8 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition  xmlns="http://www.w3.org/1999/xhtml"
-                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <div class="sidebar" data-active-color="rose" data-background-color="white">
         <!--
     Tip 1: You can change the color of active element of the sidebar using: data-active-color="purple | blue | green | orange | red | rose"
@@ -140,6 +141,52 @@
                                 <a href="http://localhost:8080/ExamOnline/app/user/user-create.xhtml">
                                     <span class="sidebar-mini"> C </span>
                                     <span class="sidebar-normal"> Create User </span>
+                                    <c:set var="createOrUpdate" value="create" scope="session" />
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="#{request.requestURI.contains('/student/') ? 'active' : ''}">
+                    <a data-toggle="collapse" href="#student">
+                        <i class="material-icons">sentiment_dissatisfied</i>
+                        <p> Students
+                            <b class="caret"></b>
+                        </p>
+                    </a>
+
+                    <div class="collapse #{request.requestURI.contains('/student/') ? 'in' : ''}" id="student">
+                        <ul class="nav">
+                            <li class="#{request.requestURI == '/ExamOnline/app/student/student-list.xhtml' || request.requestURI == '/ExamOnline/app/student/student-details.xhtml' ? 'active' : ''}">
+                                <a href="http://localhost:8080/ExamOnline/app/student/student-list.xhtml">
+                                    <span class="sidebar-mini"> L </span>
+                                    <span class="sidebar-normal"> Student List </span>
+                                </a>
+                            </li>
+
+                            <li class="#{request.requestURI == '/ExamOnline/app/student/student-create.xhtml' ? 'active' : null}">
+                                <a href="http://localhost:8080/ExamOnline/app/student/student-create.xhtml">
+                                    <span class="sidebar-mini"> C </span>
+                                    <span class="sidebar-normal"> Create Student </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="#{request.requestURI.contains('/answer/') ? 'active' : ''}">
+                    <a data-toggle="collapse" href="#answer">
+                        <i class="material-icons">insert_comment</i>
+                        <p> Answers
+                            <b class="caret"></b>
+                        </p>
+                    </a>
+
+                    <div class="collapse #{request.requestURI.contains('/answer/') ? 'in' : ''}" id="answer">
+                        <ul class="nav">
+                            <li class="#{request.requestURI == '/ExamOnline/app/answer/answer-list.xhtml' || request.requestURI == '/ExamOnline/app/answer/answer-details.xhtml' ? 'active' : ''}">
+                                <a href="http://localhost:8080/ExamOnline/app/answer/answer-list.xhtml">
+                                    <span class="sidebar-mini"> A </span>
+                                    <span class="sidebar-normal"> Answer List </span>
                                 </a>
                             </li>
                         </ul>
