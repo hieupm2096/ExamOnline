@@ -43,7 +43,7 @@
                                             <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label class="control-label"></label>
-                                                    <h:selectOneMenu class="selectpicker" a:data-style="btn btn-primary btn-round" value="#{questionBean.questionTypeId}">
+                                                    <h:selectOneMenu class="selectpicker" a:data-style="btn btn-primary btn-round" value="#{questionBean.questionTypeId}" disabled="true">
                                                         <f:selectItem itemValue="" itemLabel="Choose type" itemDisabled="true" />
                                                         <f:selectItems value="#{questionBean.questionTypeList}" var="t" itemValue="#{t.id}" itemLabel="#{t.title}" />
                                                     </h:selectOneMenu>
