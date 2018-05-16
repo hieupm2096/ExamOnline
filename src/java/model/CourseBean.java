@@ -171,6 +171,7 @@ public class CourseBean {
         String inputId = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getParameter("id");
         Course course = courseFacade.find(inputId);
         course.setDescription(description);
+        course.setName(name);
         courseFacade.update(course);
         return "course-list?faces-redirect=true";
     }
