@@ -5,9 +5,13 @@
  */
 package model;
 
+import entity.Answer;
 import entity.Class;
 import entity.Course;
 import entity.Exam;
+import entity.ExamQuestion;
+import entity.ExamQuestionAnswer;
+import entity.ExamQuestionPK;
 import entity.ExamStudent;
 import entity.ExamStudentPK;
 import entity.Question;
@@ -16,6 +20,8 @@ import entity.User;
 import facade.ClassFacade;
 import facade.CourseFacade;
 import facade.ExamFacade;
+import facade.ExamQuestionAnswerFacade;
+import facade.ExamQuestionFacade;
 import facade.ExamStudentFacade;
 import facade.QuestionFacade;
 import facade.StudentFacade;
@@ -52,6 +58,12 @@ public class ExamBean implements Serializable {
 
     @EJB
     private ExamStudentFacade examStudentFacade;
+    
+    @EJB
+    private ExamQuestionFacade examQuestionFacade;
+    
+    @EJB
+    private ExamQuestionAnswerFacade examQuestionAnswerFacade;
 
     @EJB
     private UserFacade userFacade;
@@ -90,6 +102,7 @@ public class ExamBean implements Serializable {
     private List<Student> students;
     private List<Question> questions;
     private List<ExamStudent> examStudents;
+    private List<ExamQuestion> examQuestions;
 
     private String studentId;
     private Student foundStudent;
@@ -272,10 +285,39 @@ public class ExamBean implements Serializable {
         exam.setNumOfQuestion(numOfQuestion);
         exam.setCourseId(courseFacade.find(courseId));
         exam.setDuration(duration);
-        exam.setQuestionList(questions);
         examFacade.create(exam);
         createExamStudent(exam);
+        createExamQuestion(exam);
         return EXAM_LIST_REDIRECT;
+    }
+    
+    private void createExamQuestion(Exam exam) {
+        if (questions != null && !questions.isEmpty()) {
+            for (Question question : questions) {
+                ExamQuestionPK eqpk = new ExamQuestionPK(exam.getId(), question.getId());
+                ExamQuestion eq = new ExamQuestion();
+                eq.setExamQuestionPK(eqpk);
+                eq.setExam(exam);
+                eq.setQuestion(question);
+                eq.setContent(question.getContent());
+                eq.setCourseId(question.getCourseId());
+                eq.setQuestionTypeId(question.getQuestionTypeId());
+                eq.setExamQuestionAnswerList(new ArrayList<>());
+                String currentEqaId = examQuestionAnswerFacade.generateExamQuestionAnswerId();
+                long number = Integer.parseInt(currentEqaId.substring(1)) - 1;
+                for (Answer answer : question.getAnswerList()) {
+                    number++;
+                    ExamQuestionAnswer eqa = new ExamQuestionAnswer();
+                    eqa.setId(String.format("Z%09d", number));
+                    eqa.setContent(answer.getContent());
+                    eqa.setIsCorrect(answer.getIsCorrect());
+                    eqa.setExamQuestion(eq);
+                    eqa.setAnswer(answer);
+                    eq.getExamQuestionAnswerList().add(eqa);
+                }
+                examQuestionFacade.create(eq);
+            }
+        }
     }
 
     private void createExamStudent(Exam exam) {
@@ -319,17 +361,12 @@ public class ExamBean implements Serializable {
             id = exam.getId();
             description = exam.getDescription();
             courseId = exam.getCourseId().getId();
-
             duration = exam.getDuration();
-
-            questions = exam.getQuestionList();
-            numOfQuestion = questions.size();
-
+            numOfQuestion = examQuestions.size();
+            examQuestions = exam.getExamquestionList();
             examStudents = exam.getExamStudentList();
-
             user = exam.getUserId();
             startTime = exam.getStartTime();
-
         }
     }
 
@@ -482,6 +519,14 @@ public class ExamBean implements Serializable {
 
     public void setExamStudents(List<ExamStudent> examStudents) {
         this.examStudents = examStudents;
+    }
+
+    public List<ExamQuestion> getExamQuestions() {
+        return examQuestions;
+    }
+
+    public void setExamQuestions(List<ExamQuestion> examQuestions) {
+        this.examQuestions = examQuestions;
     }
 
     public Exam getExam() {

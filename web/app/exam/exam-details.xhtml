@@ -183,27 +183,29 @@
                                                         <h4 class="card-title">Questions</h4>
                                                     </div>
                                                     <div class="card-content table-responsive">
-                                                        <h:dataTable value="#{examBean.questions}" var="q" 
+                                                        <h:dataTable value="#{examBean.examQuestions}" var="q" 
                                                                      class="table table-striped table-no-bordered table-hover" 
                                                                      id="questionDatatable" cellspacing="0" width="100%" style="width:100%"
                                                                      columnClasses=",,text-center">
                                                             <h:column>
                                                                 <f:facet name="header">#</f:facet>
-                                                                    #{q.id}
+                                                                    #{q.question.id}
                                                             </h:column>
                                                             <h:column>
                                                                 <f:facet name="header">Question</f:facet>
                                                                     #{q.content}
                                                             </h:column>
-                                                            <h:column headerClass="disabled-sorting text-center td-actions">
-                                                                <f:facet name="header">Actions</f:facet>
-                                                                <h:link class="btn btn-simple btn-info btn-icon edit" 
-                                                                        outcome="/app/question/question-details" 
-                                                                        rel="tooltip" a:data-original-title="Question Details">
-                                                                    <i class="material-icons">description</i>
-                                                                    <f:param name="id" value="#{q.id}" />
-                                                                </h:link>
-                                                            </h:column>
+                                                            <c:if test="#{!examBean.examStarted}">
+                                                                <h:column headerClass="disabled-sorting text-center td-actions">
+                                                                    <f:facet name="header">Actions</f:facet>
+                                                                    <h:link class="btn btn-simple btn-info btn-icon edit" 
+                                                                            outcome="/app/question/question-details" 
+                                                                            rel="tooltip" a:data-original-title="Question Details">
+                                                                        <i class="material-icons">description</i>
+                                                                        <f:param name="id" value="#{q.question.id}" />
+                                                                    </h:link>
+                                                                </h:column>
+                                                            </c:if>
                                                         </h:dataTable>
                                                     </div>
                                                 </div>

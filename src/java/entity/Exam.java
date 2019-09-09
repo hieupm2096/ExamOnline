@@ -14,8 +14,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -45,37 +43,43 @@ import javax.xml.bind.annotation.XmlTransient;
 public class Exam implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 7)
     @Column(name = "_id")
     private String id;
+    
     @Size(max = 200)
     @Column(name = "_description")
     private String description;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "_num_of_question")
     private int numOfQuestion;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "_duration")
     private int duration;
+    
     @Column(name = "_start_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date startTime;
-    @JoinTable(name = "examquestion", joinColumns = {
-        @JoinColumn(name = "_exam_id", referencedColumnName = "_id")}, inverseJoinColumns = {
-        @JoinColumn(name = "_question_id", referencedColumnName = "_id")})
-    @ManyToMany
-    private List<Question> questionList;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "exam")
+    private List<ExamQuestion> examquestionList;
+    
     @JoinColumn(name = "_user_id", referencedColumnName = "_id")
     @ManyToOne
     private User userId;
+    
     @JoinColumn(name = "_course_id", referencedColumnName = "_id")
     @ManyToOne(optional = false)
     private Course courseId;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "exam")
     private List<ExamStudent> examStudentList;
 
@@ -133,13 +137,14 @@ public class Exam implements Serializable {
     }
 
     @XmlTransient
-    public List<Question> getQuestionList() {
-        return questionList;
+    public List<ExamQuestion> getExamquestionList() {
+        return examquestionList;
     }
 
-    public void setQuestionList(List<Question> questionList) {
-        this.questionList = questionList;
+    public void setExamquestionList(List<ExamQuestion> examquestionList) {
+        this.examquestionList = examquestionList;
     }
+
 
     public User getUserId() {
         return userId;

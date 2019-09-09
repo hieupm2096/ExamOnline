@@ -52,8 +52,6 @@ public class Question implements Serializable {
     @NotNull
     @Column(name = "_status")
     private boolean status;
-    @ManyToMany(mappedBy = "questionList")
-    private List<Exam> examList;
     @JoinColumn(name = "_question_type_id", referencedColumnName = "_id")
     @ManyToOne(optional = false)
     private QuestionType questionTypeId;
@@ -97,15 +95,6 @@ public class Question implements Serializable {
 
     public void setStatus(boolean status) {
         this.status = status;
-    }
-
-    @XmlTransient
-    public List<Exam> getExamList() {
-        return examList;
-    }
-
-    public void setExamList(List<Exam> examList) {
-        this.examList = examList;
     }
 
     public QuestionType getQuestionTypeId() {
