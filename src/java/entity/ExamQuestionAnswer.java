@@ -6,19 +6,25 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -53,10 +59,11 @@ public class ExamQuestionAnswer implements Serializable {
         , @JoinColumn(name = "_question_id", referencedColumnName = "_question_id")})
     @ManyToOne(optional = false)
     private ExamQuestion examQuestion;
-    
     @JoinColumn(name = "_answer_id", referencedColumnName = "_id")
     @ManyToOne(optional = false)
     private Answer answer;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "answer")
+    private List<ExamStudentAnswer> examstudentanswerList;
 
     public ExamQuestionAnswer() {
     }
@@ -108,6 +115,15 @@ public class ExamQuestionAnswer implements Serializable {
 
     public void setAnswer(Answer answer) {
         this.answer = answer;
+    }
+
+    @XmlTransient
+    public List<ExamStudentAnswer> getExamstudentanswerList() {
+        return examstudentanswerList;
+    }
+
+    public void setExamstudentanswerList(List<ExamStudentAnswer> examstudentanswerList) {
+        this.examstudentanswerList = examstudentanswerList;
     }
 
     @Override

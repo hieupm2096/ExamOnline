@@ -18,6 +18,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -40,15 +41,15 @@ public class ExamQuestion implements Serializable {
     @EmbeddedId
     protected ExamQuestionPK examQuestionPK;
     
-    @JoinColumn(name = "_question_type_id", referencedColumnName = "_id", insertable = false, updatable = false)
-    @ManyToOne
+    @JoinColumn(name = "_question_type_id", referencedColumnName = "_id")
+    @ManyToOne(optional = false)
     private QuestionType questionTypeId;
     
     @Size(max = 200)
     @Column(name = "_content")
     private String content;
     
-    @JoinColumn(name = "_course_id", referencedColumnName = "_id", insertable = false, updatable = false)
+    @JoinColumn(name = "_course_id", referencedColumnName = "_id")
     @ManyToOne
     private Course courseId;
     
@@ -163,6 +164,7 @@ public class ExamQuestion implements Serializable {
         return "entity.ExamQuestion[ examQuestionPK=" + examQuestionPK + " ]";
     }
 
+    @XmlTransient
     public List<ExamQuestionAnswer> getExamQuestionAnswerList() {
         return examQuestionAnswerList;
     }

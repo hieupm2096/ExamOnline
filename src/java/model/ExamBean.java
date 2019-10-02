@@ -362,8 +362,8 @@ public class ExamBean implements Serializable {
             description = exam.getDescription();
             courseId = exam.getCourseId().getId();
             duration = exam.getDuration();
+            examQuestions = exam.getExamQuestionList();
             numOfQuestion = examQuestions.size();
-            examQuestions = exam.getExamquestionList();
             examStudents = exam.getExamStudentList();
             user = exam.getUserId();
             startTime = exam.getStartTime();

@@ -70,7 +70,7 @@ public class Exam implements Serializable {
     private Date startTime;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "exam")
-    private List<ExamQuestion> examquestionList;
+    private List<ExamQuestion> examQuestionList;
     
     @JoinColumn(name = "_user_id", referencedColumnName = "_id")
     @ManyToOne
@@ -137,12 +137,12 @@ public class Exam implements Serializable {
     }
 
     @XmlTransient
-    public List<ExamQuestion> getExamquestionList() {
-        return examquestionList;
+    public List<ExamQuestion> getExamQuestionList() {
+        return examQuestionList;
     }
 
-    public void setExamquestionList(List<ExamQuestion> examquestionList) {
-        this.examquestionList = examquestionList;
+    public void setExamQuestionList(List<ExamQuestion> examQuestionList) {
+        this.examQuestionList = examQuestionList;
     }
 
 

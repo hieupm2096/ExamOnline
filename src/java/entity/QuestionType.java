@@ -53,6 +53,8 @@ public class QuestionType implements Serializable {
     private boolean status;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "questionTypeId")
     private List<Question> questionList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "questionTypeId")
+    private List<ExamQuestion> examQuestionList;
 
     public QuestionType() {
     }
@@ -98,6 +100,14 @@ public class QuestionType implements Serializable {
 
     public void setQuestionList(List<Question> questionList) {
         this.questionList = questionList;
+    }
+
+    public List<ExamQuestion> getExamQuestionList() {
+        return examQuestionList;
+    }
+
+    public void setExamQuestionList(List<ExamQuestion> examQuestionList) {
+        this.examQuestionList = examQuestionList;
     }
 
     @Override

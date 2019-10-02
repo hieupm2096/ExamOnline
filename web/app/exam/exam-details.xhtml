@@ -84,10 +84,10 @@
                                             <div class="col-md-2">
                                                 <c:choose>
                                                     <c:when test="#{!examBean.examStarted}">
-                                                        <input type="text" class="text-warning form-control" value="Pending" readonly="true"></input>
+                                                        <input type="text" class="text-warning form-control text-warning" value="Pending" readonly="true"></input>
                                                     </c:when>
                                                     <c:when test="#{examBean.examStarted and examBean.examOngoing}">
-                                                        <input type="text" class="text-success form-control" value="On Going" readonly="true"></input>
+                                                        <input type="text" class="text-success form-control text-info" value="On Going" readonly="true"></input>
                                                     </c:when>
                                                     <c:otherwise>
                                                         <input type="text" class="text-muted form-control" value="N/A" readonly="true"></input>
@@ -104,7 +104,9 @@
                                                         class="form-control"
                                                         readonly="true"
                                                         rendered="#{examBean.examStarted}"
-                                                        a:type="datetime-local"/>
+                                                        a:type="datetime-local">
+                                                        <f:convertDateTime pattern="yyyy-MM-dd'T'HH:mm"/>
+                                                    </h:inputText>
                                                 </div>
                                             </h:panelGroup>
                                             <h:panelGroup id="elapsedTimePanelGroup" rendered="#{examBean.examOngoing}">
@@ -167,7 +169,17 @@
                                                             </h:column>
                                                             <h:column>
                                                                 <f:facet name="header">Result</f:facet>
-                                                                    #{es.result != null ? es.result : 'N/A'}
+                                                                <h:link
+                                                                    class="btn btn-simple btn-info btn-icon edit"
+                                                                    outcome="exam-student"
+                                                                    rel="tooltip"
+                                                                    a:data-original-title="Result"
+                                                                    rendered="#{es.result != null}"
+                                                                    value="#{es.result}">
+                                                                    <f:param name="examId" value="#{es.exam.id}" />
+                                                                    <f:param name="studentId" value="#{es.student.id}" />
+                                                                </h:link>
+                                                                <h:outputText value="N/A" rendered="#{es.result == null}" />
                                                             </h:column>
                                                         </h:dataTable>
                                                     </div>

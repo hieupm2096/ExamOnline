@@ -12049,7 +12049,7 @@ fieldset[disabled] .navbar .btn-link:focus {
 }
 
 footer {
-    padding: 15px 0;
+    /*padding: 15px 0;*/
 }
 
 footer ul {
